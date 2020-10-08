@@ -23,6 +23,12 @@ const pinTemplate = document.querySelector(`#pin`)
   .content
   .querySelector(`.map__pin`);
 const pinsList = document.querySelector(`.map__pins`);
+const typesListPriceMin = {
+  'bungalow': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
 
 const generateRandomInt = (min, max) => {
   let rand = min + Math.random() * (max + 1 - min);
@@ -63,22 +69,7 @@ const getAddress = (location) => {
 };
 
 const getPrice = (type) => {
-  let priceMin = 0;
-  switch (type) {
-    case TYPE_LIST[3]:
-      priceMin = 0;
-      break;
-    case TYPE_LIST[2]:
-      priceMin = 5000;
-      break;
-    case TYPE_LIST[1]:
-      priceMin = 1000;
-      break;
-    case TYPE_LIST[0]:
-      priceMin = 10000;
-      break;
-  }
-  let newPrice = generateRandomInt(priceMin, PRICE_MAX);
+  let newPrice = generateRandomInt(typesListPriceMin[type], PRICE_MAX);
   return newPrice;
 };
 
@@ -126,24 +117,25 @@ const createPin = (pinInfo) => {
   return newPinItem;
 };
 
-const createPinsFragment = () => {
-  for (let i = 1; i <= AUTHORS_COUNT; i++) {
-    let newSign = generateSign(i);
+const generatePinsArray = () => {
+  for (let i = 0; i < AUTHORS_COUNT; i++) {
+    let newSign = generateSign(i + 1);
     signsList.push(newSign);
   }
+};
 
+const createPinsFragment = () => {
   let pinFragment = document.createDocumentFragment();
 
   for (let i of signsList) {
-    let newItem = createPin(i);
-    pinFragment.appendChild(newItem);
+    pinFragment.appendChild(createPin(i));
   }
   return pinFragment;
 };
 
 const createPinsList = () => {
-  let pinFragment = createPinsFragment();
-  pinsList.appendChild(pinFragment);
+  generatePinsArray();
+  pinsList.appendChild(createPinsFragment());
 };
 
 map.classList.remove(`map--faded`);
