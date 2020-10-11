@@ -22,12 +22,20 @@ const mapBlockWidth = map.offsetWidth;
 const pinTemplate = document.querySelector(`#pin`)
   .content
   .querySelector(`.map__pin`);
+const cardTemplate = document.querySelector(`#card`)
+  .content;
 const pinsList = document.querySelector(`.map__pins`);
 const typesListPriceMin = {
   'bungalow': 0,
   'flat': 1000,
   'house': 5000,
   'palace': 10000
+};
+const typesListTranslations = {
+  'bungalow': `Бунгало`,
+  'flat': `Квартира`,
+  'house': `Дом`,
+  'palace': `Дворец`
 };
 
 const generateRandomInt = (min, max) => {
@@ -79,7 +87,7 @@ const getRooms = () => {
 };
 
 const getGuests = () => {
-  let guestsCount = GUEST_COUNT[generateRandomInt(0, ROOMS_COUNT.length - 1)];
+  let guestsCount = GUEST_COUNT[generateRandomInt(0, GUEST_COUNT.length - 1)];
   return guestsCount;
 };
 
@@ -138,7 +146,61 @@ const createPinsList = () => {
   pinsList.appendChild(createPinsFragment());
 };
 
+const getTypeTranslation = (type) => {
+  let newTypeTranslation = typesListTranslations[type];
+  return newTypeTranslation;
+};
+
+const checkFeatures = (featureElement, featureObject) => {
+  let isOnTheList = false;
+  for (let i = 0; i < featureObject.length; i++) {
+    if (featureElement.classList.contains(`popup__feature--${featureObject[i]}`)) {
+      isOnTheList = true;
+    }
+  }
+  return isOnTheList;
+};
+
+const generateFeaturesList = (featuresItem, featureObject) => {
+  const featuresElements = featuresItem.querySelectorAll(`.popup__feature`);
+  for (let i = 0; i < featuresElements.length; i++) {
+    if (checkFeatures(featuresElements[i], featureObject)) {
+      featuresElements[i].classList.add(`visually-hidden`);
+    }
+  }
+};
+
+const generatePhotosList = (photoItem, photosList) => {
+  photoItem.querySelector(`.popup__photo`).src = photosList[0];
+  for (let i = 1; i < photosList.length; i++) {
+    let newPhoto = cardTemplate.querySelector(`.popup__photo`).cloneNode(true);
+    newPhoto.src = photosList[i];
+    photoItem.appendChild(newPhoto);
+  }
+};
+
+const createCard = (pin) => {
+  let newCard = cardTemplate.cloneNode(true);
+  newCard.querySelector(`.popup__text--address`).textContent = pin.offer.address;
+  newCard.querySelector(`.popup__text--price`).textContent = pin.offer.price;
+  newCard.querySelector(`.popup__type`).textContent = getTypeTranslation(pin.offer.type);
+  newCard.querySelector(`.popup__text--capacity`).textContent = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`;
+  newCard.querySelector(`.popup__text--time`).textContent = `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`;
+  generateFeaturesList(newCard.querySelector(`.popup__features`), pin.offer.features);
+  newCard.querySelector(`.popup__description`).textContent = pin.offer.description;
+  generatePhotosList(newCard.querySelector(`.popup__photos`), pin.offer.photos);
+  newCard.querySelector(`.popup__avatar`).src = pin.avatar;
+
+  map.insertBefore(newCard, map.querySelector(`.map__filters-container`));
+};
+
+const showFirstCard = () => {
+  let firstCard = signsList[0];
+  createCard(firstCard);
+};
+
 map.classList.remove(`map--faded`);
 
 createPinsList();
 
+showFirstCard();
