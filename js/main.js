@@ -151,32 +151,34 @@ const getTypeTranslation = (type) => {
   return newTypeTranslation;
 };
 
-const checkFeatures = (featureElement, featureObject) => {
-  let isOnTheList = false;
-  for (let i = 0; i < featureObject.length; i++) {
-    if (featureElement.classList.contains(`popup__feature--${featureObject[i]}`)) {
-      isOnTheList = true;
-    }
-  }
-  return isOnTheList;
+const generateFeaturesItem = (featuresObjectItem) => {
+  let newFeaturesItem = document.createElement(`li`);
+  newFeaturesItem.classList.add(`popup__feature`);
+  newFeaturesItem.classList.add(`popup__feature--${featuresObjectItem}`);
+
+  return newFeaturesItem;
 };
 
-const generateFeaturesList = (featuresItem, featureObject) => {
-  const featuresElements = featuresItem.querySelectorAll(`.popup__feature`);
-  for (let i = 0; i < featuresElements.length; i++) {
-    if (checkFeatures(featuresElements[i], featureObject)) {
-      featuresElements[i].classList.add(`visually-hidden`);
-    }
+const createFeaturesFragment = (featuresObject) => {
+  let featuresFragment = document.createDocumentFragment();
+  for (let i of featuresObject) {
+    featuresFragment.appendChild(generateFeaturesItem(i));
   }
+  return featuresFragment;
 };
 
-const generatePhotosList = (photoItem, photosList) => {
-  photoItem.querySelector(`.popup__photo`).src = photosList[0];
-  for (let i = 1; i < photosList.length; i++) {
-    let newPhoto = cardTemplate.querySelector(`.popup__photo`).cloneNode(true);
-    newPhoto.src = photosList[i];
-    photoItem.appendChild(newPhoto);
+const generatePhotoItem = (photoItem) => {
+  let newPhotoItem = cardTemplate.querySelector(`.popup__photo`).cloneNode(true);
+  newPhotoItem.src = photoItem;
+  return newPhotoItem;
+};
+
+const createPhotoFragment = (featuresObject) => {
+  let photoFragment = document.createDocumentFragment();
+  for (let i of featuresObject) {
+    photoFragment.appendChild(generatePhotoItem(i));
   }
+  return photoFragment;
 };
 
 const createCard = (pin) => {
@@ -186,17 +188,23 @@ const createCard = (pin) => {
   newCard.querySelector(`.popup__type`).textContent = getTypeTranslation(pin.offer.type);
   newCard.querySelector(`.popup__text--capacity`).textContent = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`;
   newCard.querySelector(`.popup__text--time`).textContent = `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`;
-  generateFeaturesList(newCard.querySelector(`.popup__features`), pin.offer.features);
+  newCard.querySelector(`.popup__features`).innerHTML = ``;
+  newCard.querySelector(`.popup__features`).appendChild(createFeaturesFragment(pin.offer.features));
   newCard.querySelector(`.popup__description`).textContent = pin.offer.description;
-  generatePhotosList(newCard.querySelector(`.popup__photos`), pin.offer.photos);
+  newCard.querySelector(`.popup__photos`).innerHTML = ``;
+  newCard.querySelector(`.popup__photos`).appendChild(createPhotoFragment(pin.offer.photos));
   newCard.querySelector(`.popup__avatar`).src = pin.avatar;
 
-  map.insertBefore(newCard, map.querySelector(`.map__filters-container`));
+  return newCard;
+};
+
+const insertCard = (card) => {
+  map.insertBefore(card, map.querySelector(`.map__filters-container`));
 };
 
 const showFirstCard = () => {
   let firstCard = signsList[0];
-  createCard(firstCard);
+  insertCard(createCard(firstCard));
 };
 
 map.classList.remove(`map--faded`);
