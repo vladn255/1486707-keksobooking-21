@@ -173,9 +173,9 @@ const generatePhotoItem = (photoItem) => {
   return newPhotoItem;
 };
 
-const createPhotoFragment = (featuresObject) => {
+const createPhotoFragment = (photos) => {
   let photoFragment = document.createDocumentFragment();
-  for (let i of featuresObject) {
+  for (let i of photos) {
     photoFragment.appendChild(generatePhotoItem(i));
   }
   return photoFragment;
