@@ -14,6 +14,7 @@ const ROOMS_COUNT = [1, 2, 3, 100];
 const GUEST_COUNT = [1, 2, 3];
 const PIN_WIDTH = 40;
 const PIN_HEIGHT = 40;
+const PIN_MAIN_HEIGHT = 44;
 const AUTHORS_COUNT = 8;
 
 const signsList = [];
@@ -24,7 +25,7 @@ const pinTemplate = document.querySelector(`#pin`)
   .querySelector(`.map__pin`);
 const cardTemplate = document.querySelector(`#card`)
   .content;
-const pinsList = document.querySelector(`.map__pins`);
+const mapPins = document.querySelector(`.map__pins`);
 const typesListPriceMin = {
   'bungalow': 0,
   'flat': 1000,
@@ -37,6 +38,11 @@ const typesListTranslations = {
   'house': `Дом`,
   'palace': `Дворец`
 };
+const adForm = document.querySelector(`.ad-form`);
+const mapFilters = document.querySelector(`.map__filters`);
+const mapPinMain = document.querySelector(`.map__pin--main`);
+const capacity = adForm.querySelector(`#capacity`);
+const roomNumber = adForm.querySelector(`#room_number`);
 
 const generateRandomInt = (min, max) => {
   let rand = min + Math.random() * (max + 1 - min);
@@ -143,7 +149,7 @@ const createPinsFragment = () => {
 
 const createPinsList = () => {
   generatePinsArray();
-  pinsList.appendChild(createPinsFragment());
+  mapPins.appendChild(createPinsFragment());
 };
 
 const getTypeTranslation = (type) => {
@@ -207,7 +213,68 @@ const showFirstCard = () => {
   insertCard(createCard(firstCard));
 };
 
-map.classList.remove(`map--faded`);
+const setInitialMode = () => {
+  setInputsStatus(adForm.querySelectorAll(`fieldset`), true);
+  setInputsStatus(mapFilters, true);
+  setInputsStatus(mapFilters.querySelectorAll(`fieldset`), true);
+  setInputsStatus(mapFilters.querySelectorAll(`select`), true);
+};
+
+const setAddressValue = (pin, width = PIN_WIDTH, height = PIN_HEIGHT) => {
+  let leftPosition = parseInt(pin.style.left, 10);
+  let topPosition = parseInt(pin.style.top, 10);
+  adForm.querySelector(`input[name="address"]`).value = `${Math.round(leftPosition + width / 2)}, ${Math.round(topPosition + height)}`;
+};
+
+const setInputsStatus = (collection, boolean) => {
+  for (let item of collection) {
+    item.disabled = boolean;
+  }
+};
+
+const onSetActiveMode = (evt) => {
+  if (evt.button === 0 || evt.key === `Enter`) {
+    map.classList.remove(`map--faded`);
+    adForm.classList.remove(`ad-form--disabled`);
+    setInputsStatus(adForm.querySelectorAll(`fieldset`), false);
+    setInputsStatus(mapFilters, false);
+    setInputsStatus(mapFilters.querySelectorAll(`fieldset`), false);
+    setInputsStatus(mapFilters.querySelectorAll(`select`), false);
+
+    setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
+  }
+};
+
+const setRoomsValidity = () => {
+  let roomNumberValue = parseInt(roomNumber.value, 10);
+  let capacityValue = parseInt(capacity.value, 10);
+  if ((roomNumberValue < capacityValue) && (roomNumberValue !== ROOMS_COUNT[ROOMS_COUNT.length - 1])) {
+    capacity.setCustomValidity(`Количество гостей превышает допустимое для указанного количества комнат`);
+  } else if ((roomNumberValue === ROOMS_COUNT[ROOMS_COUNT.length - 1]) && (capacityValue !== 0)) {
+    roomNumber.setCustomValidity(`Такое количество комнат предназначено не для гостей`);
+  } else if ((roomNumberValue !== ROOMS_COUNT[ROOMS_COUNT.length - 1]) && (capacityValue === 0)) {
+    capacity.setCustomValidity(`Укажите количество комнат - 100`);
+  } else {
+    capacity.setCustomValidity(``);
+    roomNumber.setCustomValidity(``);
+  }
+  capacity.reportValidity();
+  roomNumber.reportValidity();
+};
+
+const onSetRoomsValidity = () => {
+  setRoomsValidity();
+};
+
+adForm.addEventListener(`change`, onSetRoomsValidity);
+
+mapPins.addEventListener(`mousedown`, onSetActiveMode);
+
+mapPins.addEventListener(`keydown`, onSetActiveMode);
+
+setInitialMode();
+
+setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT / 2);
 
 createPinsList();
 
