@@ -223,20 +223,24 @@ const showFirstCard = () => {
 
 const setInputsStatus = (collection, boolean) => {
   for (let item of collection) {
-    item.setAttribute(`disabled`, boolean);
+    if (boolean) {
+      item.setAttribute(`disabled`);
+    }
   }
 };
 
-const setDisabledAttribute = (set) => {
-  for (let i of set) {
-    setInputsStatus(set[i], true);
-  }
+const setDisabledAttribute = () => {
+  setInputsStatus(formInputsSet.adForm, true);
+  setInputsStatus(formInputsSet.mapFilter, true);
+  setInputsStatus(formInputsSet.mapFiltersFieldsets, true);
+  setInputsStatus(formInputsSet.mapFiltersSelects, true);
 };
 
-const removeDisabledAttribute = (set) => {
-  for (let i of set) {
-    setInputsStatus(set[i], false);
-  }
+const removeDisabledAttribute = () => {
+  setInputsStatus(formInputsSet.adForm, false);
+  setInputsStatus(formInputsSet.mapFilter, false);
+  setInputsStatus(formInputsSet.mapFiltersFieldsets, false);
+  setInputsStatus(formInputsSet.mapFiltersSelects, false);
 };
 
 const setAddressValue = (pin, width = PIN_WIDTH, height = PIN_HEIGHT) => {
@@ -252,7 +256,7 @@ const onSetActiveMode = (evt) => {
   if (evt.button === 0 || evt.key === `Enter`) {
     map.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
-    removeDisabledAttribute(formInputsSet);
+    removeDisabledAttribute();
 
     setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
   }
