@@ -224,7 +224,9 @@ const showFirstCard = () => {
 const setInputsStatus = (collection, boolean) => {
   for (let item of collection) {
     if (boolean) {
-      item.setAttribute(`disabled`);
+      item.setAttribute(`disabled`, true);
+    } else {
+      item.removeAttribute(`disabled`);
     }
   }
 };
