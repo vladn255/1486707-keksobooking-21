@@ -14,7 +14,9 @@ const ROOMS_COUNT = [1, 2, 3, 100];
 const GUEST_COUNT = [1, 2, 3];
 const PIN_WIDTH = 40;
 const PIN_HEIGHT = 40;
+const PIN_MAIN_HEIGHT = 44;
 const AUTHORS_COUNT = 8;
+const MAX_ROOMS_COUNT = 100;
 
 const signsList = [];
 const map = document.querySelector(`.map`);
@@ -24,7 +26,7 @@ const pinTemplate = document.querySelector(`#pin`)
   .querySelector(`.map__pin`);
 const cardTemplate = document.querySelector(`#card`)
   .content;
-const pinsList = document.querySelector(`.map__pins`);
+const mapPins = document.querySelector(`.map__pins`);
 const typesListPriceMin = {
   'bungalow': 0,
   'flat': 1000,
@@ -37,6 +39,18 @@ const typesListTranslations = {
   'house': `Дом`,
   'palace': `Дворец`
 };
+const adForm = document.querySelector(`.ad-form`);
+const mapFilters = document.querySelector(`.map__filters`);
+const mapPinMain = document.querySelector(`.map__pin--main`);
+const capacity = adForm.querySelector(`#capacity`);
+const roomNumber = adForm.querySelector(`#room_number`);
+const formInputsSet = {
+  adForm: adForm.querySelectorAll(`fieldset`),
+  mapFilter: mapFilters,
+  mapFiltersFieldsets: mapFilters.querySelectorAll(`fieldset`),
+  mapFiltersSelects: mapFilters.querySelectorAll(`select`)
+};
+const inputAddress = adForm.querySelector(`input[name="address"]`);
 
 const generateRandomInt = (min, max) => {
   let rand = min + Math.random() * (max + 1 - min);
@@ -143,7 +157,7 @@ const createPinsFragment = () => {
 
 const createPinsList = () => {
   generatePinsArray();
-  pinsList.appendChild(createPinsFragment());
+  mapPins.appendChild(createPinsFragment());
 };
 
 const getTypeTranslation = (type) => {
@@ -207,8 +221,76 @@ const showFirstCard = () => {
   insertCard(createCard(firstCard));
 };
 
-map.classList.remove(`map--faded`);
+const setInputsStatus = (collection, boolean) => {
+  for (let item of collection) {
+    if (boolean) {
+      item.setAttribute(`disabled`, true);
+    } else {
+      item.removeAttribute(`disabled`);
+    }
+  }
+};
 
-createPinsList();
+const setDisabledAttribute = () => {
+  setInputsStatus(formInputsSet.adForm, true);
+  setInputsStatus(formInputsSet.mapFilter, true);
+  setInputsStatus(formInputsSet.mapFiltersFieldsets, true);
+  setInputsStatus(formInputsSet.mapFiltersSelects, true);
+};
 
-showFirstCard();
+const removeDisabledAttribute = () => {
+  setInputsStatus(formInputsSet.adForm, false);
+  setInputsStatus(formInputsSet.mapFilter, false);
+  setInputsStatus(formInputsSet.mapFiltersFieldsets, false);
+  setInputsStatus(formInputsSet.mapFiltersSelects, false);
+};
+
+const setAddressValue = (pin, width = PIN_WIDTH, height = PIN_HEIGHT) => {
+  let leftPosition = parseInt(pin.style.left, 10);
+  let topPosition = parseInt(pin.style.top, 10);
+  inputAddress.value = `${Math.round(leftPosition + width / 2)}, ${Math.round(topPosition + height)}`;
+};
+
+const onSetActiveMode = (evt) => {
+  createPinsList();
+  showFirstCard();
+
+  if (evt.button === 0 || evt.key === `Enter`) {
+    map.classList.remove(`map--faded`);
+    adForm.classList.remove(`ad-form--disabled`);
+    removeDisabledAttribute();
+
+    setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
+  }
+};
+
+const setRoomsValidity = () => {
+  let roomNumberValue = parseInt(roomNumber.value, 10);
+  let capacityValue = parseInt(capacity.value, 10);
+  if ((roomNumberValue < capacityValue) && (roomNumberValue !== MAX_ROOMS_COUNT)) {
+    capacity.setCustomValidity(`Количество гостей превышает допустимое для указанного количества комнат`);
+  } else if ((roomNumberValue === MAX_ROOMS_COUNT) && (capacityValue !== 0)) {
+    roomNumber.setCustomValidity(`Такое количество комнат предназначено не для гостей`);
+  } else if ((roomNumberValue !== MAX_ROOMS_COUNT) && (capacityValue === 0)) {
+    capacity.setCustomValidity(`Укажите количество комнат - 100`);
+  } else {
+    capacity.setCustomValidity(``);
+    roomNumber.setCustomValidity(``);
+  }
+  capacity.reportValidity();
+  roomNumber.reportValidity();
+};
+
+const onSetRoomsValidity = () => {
+  setRoomsValidity();
+};
+
+adForm.addEventListener(`change`, onSetRoomsValidity);
+
+mapPinMain.addEventListener(`mousedown`, onSetActiveMode);
+
+mapPinMain.addEventListener(`keydown`, onSetActiveMode);
+
+setDisabledAttribute();
+
+setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT / 2);
