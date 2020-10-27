@@ -250,53 +250,47 @@ const insertCard = (card) => {
 };
 
 const addShowCardListeners = () => {
-  const mapPinsList = mapPins.querySelectorAll(`.map__pin`);
+  const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
   for (let mapPin of mapPinsList) {
     mapPin.addEventListener(`click`, onShowCard);
   }
 };
 
-const removeShowCardListeners = () => {
-  const mapPinsList = mapPins.querySelectorAll(`.map__pin`);
-  for (let mapPin of mapPinsList) {
-    mapPin.removeEventListener(`click`, onShowCard);
-  }
-};
+// const removeShowCardListeners = () => {
+//   const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+//   for (let mapPin of mapPinsList) {
+//     mapPin.removeEventListener(`click`, onShowCard);
+//   }
+// };
 
 const showCard = (pinNumber) => {
   const cardNumber = pinsList[pinNumber];
-  if (cardNumber) {
-    insertCard(renderCard(cardNumber));
+  insertCard(renderCard(cardNumber));
 
-    const mapCardPopup = document.querySelector(`.map__card`);
-    const mapCardPopupClose = mapCardPopup.querySelector(`.popup__close`);
-    mapCardPopup.classList.remove(`visually-hidden`);
+  const mapCardPopup = document.querySelector(`.map__card`);
+  const mapCardPopupClose = mapCardPopup.querySelector(`.popup__close`);
+  mapCardPopup.classList.remove(`visually-hidden`);
 
-    removeShowCardListeners();
-    mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
-    map.addEventListener(`keydown`, onCloseCardPopup);
-  }
-};
-
-const showFirstCard = () => {
-  showCard(0);
+  mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
+  map.addEventListener(`keydown`, onCloseCardPopup);
 };
 
 const onShowCard = (evt) => {
-  if (!evt.currentTarget.classList.contains(`.map__pin--main`)) {
-    const mapPinNumber = evt.currentTarget.dataset.id;
-    showCard(mapPinNumber);
+  if (document.querySelector(`.map__card`)) {
+    closeCardPopup();
   }
+  const mapPinNumber = evt.currentTarget.dataset.id;
+  showCard(mapPinNumber);
 };
 
 const closeCardPopup = () => {
   document.querySelector(`.map__card`).classList.add(`visually-hidden`);
+  addShowCardListeners();
 };
 
 const onCloseCardPopup = (evt) => {
   if ((evt.button === 0) || (evt.key === KEY_ESCAPE)) {
     closeCardPopup();
-    addShowCardListeners();
   }
 };
 
@@ -331,10 +325,10 @@ const setAddressValue = (pin, width = PIN_WIDTH, height = PIN_HEIGHT) => {
 };
 
 const onSetActiveMode = (evt) => {
-  createPinsList();
-  showFirstCard();
-
   if (evt.button === 0 || evt.key === KEY_ENTER) {
+    createPinsList();
+    addShowCardListeners();
+
     map.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
     removeDisabledAttribute();
@@ -346,6 +340,15 @@ const onSetActiveMode = (evt) => {
 
     mapPinMain.removeEventListener(`mousedown`, onSetActiveMode);
     mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
+
+    adForm.addEventListener(`change`, onSetRooms);
+    titleInput.addEventListener(`input`, onInputTitle);
+    typeInput.addEventListener(`change`, onChangeType);
+    typeInput.addEventListener(`change`, onInputPrice);
+    priceInput.addEventListener(`input`, onInputPrice);
+    checkinInput.addEventListener(`change`, onSetTime);
+    checkoutInput.addEventListener(`change`, onSetTime);
+    setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT / 2);
   }
 };
 
@@ -428,18 +431,8 @@ const onSetTime = (evt) => {
   setTimeValidity(timestamp);
 };
 
-adForm.addEventListener(`change`, onSetRooms);
-titleInput.addEventListener(`input`, onInputTitle);
-typeInput.addEventListener(`change`, onChangeType);
-typeInput.addEventListener(`change`, onInputPrice);
-priceInput.addEventListener(`input`, onInputPrice);
-checkinInput.addEventListener(`change`, onSetTime);
-checkoutInput.addEventListener(`change`, onSetTime);
-
 mapPinMain.addEventListener(`mousedown`, onSetActiveMode);
 
 mapPinMain.addEventListener(`keydown`, onSetActiveMode);
 
 setDisabledAttribute();
-
-setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT / 2);
