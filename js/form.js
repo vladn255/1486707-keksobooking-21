@@ -21,6 +21,8 @@
   const checkinInput = adForm.querySelector(`#timein`);
   const checkoutInput = adForm.querySelector(`#timeout`);
 
+  const typesListPriceMin = window.data.typesListPriceMin;
+
   // выставление статуса форм ввода
   const setInputsStatus = (collection, boolean) => {
     for (let item of collection) {
@@ -64,14 +66,14 @@
 
   // выставление условий правильности заполнения типа
   const setTypeValidity = () => {
-    const minPrice = window.data.typesListPriceMin[typeInput.value];
+    const minPrice = typesListPriceMin[typeInput.value];
     priceInput.setAttribute(`placeholder`, `${minPrice}`);
   };
 
   // выставление условий правильности заполнения цены
   const setPriceValidity = () => {
     const priceInputValue = parseInt(priceInput.value, 10);
-    const minPrice = window.data.typesListPriceMin[typeInput.value];
+    const minPrice = typesListPriceMin[typeInput.value];
 
     if (priceInputValue < minPrice) {
       priceInput.setCustomValidity(`цена не может быть меньше ${minPrice}`);

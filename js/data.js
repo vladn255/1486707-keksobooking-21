@@ -14,7 +14,7 @@
   const GUEST_COUNT = [1, 2, 3];
   const AUTHORS_COUNT = 8;
 
-  const mapBlockWidth = window.main.map.offsetWidth;
+  const mapBlockWidth = document.querySelector(`.map`).offsetWidth;
 
   const pinsList = [];
   const typesListPriceMin = {
@@ -24,13 +24,13 @@
     'palace': 10000
   };
 
-  // генерирование данных
+  // генерирование данных (имя автора)
   const generateAvatarName = (n) => {
     let avatarName = AVATAR_NAME_START + n + AVATAR_NAME_END;
     return avatarName;
   };
 
-  // генерирование данных
+  // генерирование данных (местоположение объявления)
   const generateLocation = () => {
     let location = {
       x: window.util.generateRandomInt(0, mapBlockWidth),
@@ -49,7 +49,7 @@
 
   // генерирование данных (случайная цена)
   const getPrice = (type) => {
-    let newPrice = window.util.generateRandomInt(window.data.typesListPriceMin[type], PRICE_MAX);
+    let newPrice = window.util.generateRandomInt(typesListPriceMin[type], PRICE_MAX);
     return newPrice;
   };
 
@@ -93,7 +93,7 @@
   const generatePinsArray = () => {
     for (let i = 0; i < AUTHORS_COUNT; i++) {
       let newSign = generateSign(i + 1);
-      window.data.pinsList.push(newSign);
+      pinsList.push(newSign);
     }
   };
 

@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  const mapPins = document.querySelector(`.map__pins`);
   const cardTemplate = document.querySelector(`#card`)
     .content;
 
@@ -16,8 +17,8 @@
     return newTypeTranslation;
   };
 
-  // генерирование списка удобств (создание нод)
-  const generateFeaturesItem = (featuresObjectItem) => {
+  // создание списка удобств
+  const createFeaturesItem = (featuresObjectItem) => {
     let newFeaturesItem = document.createElement(`li`);
     newFeaturesItem.classList.add(`popup__feature`);
     newFeaturesItem.classList.add(`popup__feature--${featuresObjectItem}`);
@@ -29,7 +30,7 @@
   const createFeaturesFragment = (featuresObject) => {
     let featuresFragment = document.createDocumentFragment();
     for (let feature of featuresObject) {
-      featuresFragment.appendChild(generateFeaturesItem(feature));
+      featuresFragment.appendChild(createFeaturesItem(feature));
     }
     return featuresFragment;
   };
@@ -53,7 +54,7 @@
   // создание и вставка на карту набора меток
   const createPinsList = () => {
     window.data.generatePinsArray();
-    window.main.mapPins.appendChild(window.pin.createPinsFragment());
+    mapPins.appendChild(window.pin.createPinsFragment());
   };
 
   // рендер карточки объявления

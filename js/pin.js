@@ -12,8 +12,8 @@
   // создание метки на карте
   const createPin = (pinInfo, index) => {
     let newPinItem = pinTemplate.cloneNode(true);
-    newPinItem.style.left = `${(pinInfo.location.x - window.pin.PIN_WIDTH / 2)}px`;
-    newPinItem.style.top = `${(pinInfo.location.y - window.pin.PIN_HEIGHT)}px`;
+    newPinItem.style.left = `${(pinInfo.location.x - PIN_WIDTH / 2)}px`;
+    newPinItem.style.top = `${(pinInfo.location.y - PIN_HEIGHT)}px`;
 
     let newPinItemImg = newPinItem.querySelector(`img`);
     newPinItemImg.src = pinInfo.avatar;
