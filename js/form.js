@@ -22,6 +22,8 @@
   const checkoutInput = adForm.querySelector(`#timeout`);
 
   const typesListPriceMin = window.data.typesListPriceMin;
+  const PIN_WIDTH = window.pin.PIN_WIDTH;
+  const PIN_HEIGHT = window.pin.PIN_HEIGHT;
 
   // выставление статуса форм ввода
   const setInputsStatus = (collection, boolean) => {
@@ -111,7 +113,7 @@
   };
 
   // установка значения адреса в форме
-  const setAddressValue = (pin, width = window.pin.PIN_WIDTH, height = window.pin.PIN_HEIGHT) => {
+  const setAddressValue = (pin, width = PIN_WIDTH, height = PIN_HEIGHT) => {
     let leftPosition = parseInt(pin.style.left, 10);
     let topPosition = parseInt(pin.style.top, 10);
     inputAddress.value = `${Math.round(leftPosition + width / 2)}, ${Math.round(topPosition + height)}`;
