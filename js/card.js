@@ -53,7 +53,7 @@
 
   // создание и вставка на карту набора меток
   const createPinsList = () => {
-    window.data.generatePinsArray();
+    // window.data.generatePinsArray();
     mapPins.appendChild(window.pin.createPinsFragment());
   };
 

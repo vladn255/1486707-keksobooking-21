@@ -16,7 +16,7 @@
     newPinItem.style.top = `${(pinInfo.location.y - PIN_HEIGHT)}px`;
 
     let newPinItemImg = newPinItem.querySelector(`img`);
-    newPinItemImg.src = pinInfo.avatar;
+    newPinItemImg.src = pinInfo.author.avatar;
     newPinItemImg.alt = pinInfo.offer.title;
     newPinItem.dataset.id = index;
     return newPinItem;
