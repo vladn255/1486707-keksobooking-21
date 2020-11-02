@@ -1,30 +1,20 @@
 'use strict';
 
 (function () {
-  const map = document.querySelector(`.map`);
+  const mapOverlay = document.querySelector(`.map__overlay`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
-  const mapBlockHeight = document.querySelector(`.map`).offsetHeight;
-  const mapBlockWidth = document.querySelector(`.map`).offsetWidth;
 
+  const MAP_HEIGHT_MAX = 630;
   const PIN_WIDTH = window.pin.PIN_WIDTH;
   const PIN_HEIGHT = window.pin.PIN_HEIGHT;
-  const mapMinCoordY = map.offsetTop;
-  const mapMaxCoordY = map.offsetTop + mapBlockHeight;
-  const mapMinCoordX = map.offsetLeft;
-  const mapMaxCoordX = map.offsetLeft + mapBlockWidth;
+  const MAP_MIN_COORD_Y = mapOverlay.offsetTop;
+  const MAP_MAX_COORD_Y = mapOverlay.offsetTop + MAP_HEIGHT_MAX;
+  const MAP_MIN_COORD_X = mapOverlay.offsetLeft;
+  const MAP_MAX_COORD_X = mapOverlay.offsetLeft + mapOverlay.offsetWidth;
 
   let startCoords = {
     x: 0,
     y: 0
-  };
-
-  // Проверка того, что заданный элемент находится в пределах блока "карта"
-  const checkIfCursorInsideMap = (posX, posY) => {
-    let check;
-    if ((posY < mapMinCoordY) || (posY > mapMaxCoordY) || (posX < mapMinCoordX) || (posX > mapMaxCoordX)) {
-      check = true;
-    }
-    return check;
   };
 
   // перемещение метки мышкой
@@ -39,19 +29,27 @@
     startCoords.x = moveEvt.clientX;
     startCoords.y = moveEvt.clientY;
 
-    let mapPinMainStyleTop = mapPinMain.offsetTop - shift.y;
-    let mapPinMainStyleLeft = mapPinMain.offsetLeft - shift.x;
+    let posY = mapPinMain.offsetTop - shift.y;
+    let posX = mapPinMain.offsetLeft - shift.x;
 
-    if (checkIfCursorInsideMap(startCoords.x, startCoords.y)) {
-      return;
+    if (posY <= (MAP_MIN_COORD_Y - PIN_HEIGHT)) {
+      posY = MAP_MIN_COORD_Y - PIN_HEIGHT;
+    } else if (posY >= MAP_MAX_COORD_Y) {
+      posY = MAP_MAX_COORD_Y;
     }
 
-    mapPinMain.style.top = `${mapPinMainStyleTop}px`;
-    mapPinMain.style.left = `${mapPinMainStyleLeft}px`;
+    if (posX <= (MAP_MIN_COORD_X - PIN_WIDTH / 2)) {
+      posX = MAP_MIN_COORD_X - PIN_WIDTH / 2;
+    } else if (posX >= MAP_MAX_COORD_X - PIN_WIDTH / 2) {
+      posX = MAP_MAX_COORD_X - PIN_WIDTH / 2;
+    }
+
+    mapPinMain.style.top = `${posY}px`;
+    mapPinMain.style.left = `${posX}px`;
   };
 
   // обработчик передвижения нажатой мышки
-  const onTraceMainPin = (evt, listener) => {
+  const onTraceMainPin = (evt) => {
     evt.preventDefault();
     startCoords = {
       x: evt.clientX,
@@ -61,7 +59,6 @@
     const onMouseMove = (moveEvt) => {
       moveMouse(moveEvt);
       window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_HEIGHT);
-      mapPinMain.removeEventListener(`mousedown`, listener);
     };
 
     const onMouseUp = () => {
