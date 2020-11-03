@@ -1,10 +1,12 @@
 'use strict';
 (function () {
   const KEY_ENTER = `Enter`;
-  const map = document.querySelector(`.map`);
-  const mapPinMain = document.querySelector(`.map__pin--main`);
   const PIN_WIDTH = window.pin.PIN_WIDTH;
   const PIN_MAIN_HEIGHT = window.pin.PIN_MAIN_HEIGHT;
+  const map = document.querySelector(`.map`);
+  const mapPinMain = document.querySelector(`.map__pin--main`);
+  const adForm = document.querySelector(`.ad-form`);
+  const formReset = document.querySelector(`.ad-form__reset`);
 
   // обработчик события выставления активного состояния
   const onSetActiveMode = (evt) => {
@@ -49,10 +51,20 @@
   };
 
   // установка изначальных условий
-  mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
-  mapPinMain.addEventListener(`mousedown`, onMouseDown);
-  mapPinMain.addEventListener(`mouseup`, onSetActiveMode);
-  mapPinMain.addEventListener(`keydown`, onSetActiveMode);
+  const setInitialState = () => {
+    mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
+    mapPinMain.addEventListener(`mousedown`, onMouseDown);
+    mapPinMain.addEventListener(`mouseup`, onSetActiveMode);
+    mapPinMain.addEventListener(`keydown`, onSetActiveMode);
+    window.card.removePinsList();
+    window.form.resetForm();
+    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
+  };
+
+  setInitialState();
+
+  adForm.addEventListener(`submit`, window.form.submitHandler);
+  formReset.addEventListener(`click`, window.form.onReset);
 
   window.form.setDisabledAttribute();
 

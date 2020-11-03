@@ -3,8 +3,12 @@
   const MAX_ROOMS_COUNT = 100;
   const TITLE_MIN_LENGTH = 30;
   const TITLE_MAX_LENGTH = 100;
+  const PIN_WIDTH = window.pin.PIN_WIDTH;
+  const PIN_HEIGHT = window.pin.PIN_HEIGHT;
+  const KEY_ESCAPE = `Escape`;
 
   const adForm = document.querySelector(`.ad-form`);
+  const map = document.querySelector(`.map`);
   const mapFilters = document.querySelector(`.map__filters`);
   const capacity = adForm.querySelector(`#capacity`);
   const roomNumber = adForm.querySelector(`#room_number`);
@@ -14,16 +18,18 @@
     mapFiltersFieldsets: mapFilters.querySelectorAll(`fieldset`),
     mapFiltersSelects: mapFilters.querySelectorAll(`select`)
   };
-  const inputAddress = adForm.querySelector(`input[name="address"]`);
+  const inputAddress = adForm.querySelector(`#address`);
   const titleInput = adForm.querySelector(`#title`);
   const priceInput = adForm.querySelector(`#price`);
   const typeInput = adForm.querySelector(`#type`);
   const checkinInput = adForm.querySelector(`#timein`);
   const checkoutInput = adForm.querySelector(`#timeout`);
+  const descriptionInput = adForm.querySelector(`#description`);
+  const successTemplate = document.querySelector(`#success`)
+    .content
+    .querySelector(`.success`);
 
   const typesListPriceMin = window.data.typesListPriceMin;
-  const PIN_WIDTH = window.pin.PIN_WIDTH;
-  const PIN_HEIGHT = window.pin.PIN_HEIGHT;
 
   // выставление статуса форм ввода
   const setInputsStatus = (collection, boolean) => {
@@ -35,8 +41,6 @@
       }
     }
   };
-  // выставление статуса "недоступно" в форме
-
 
   // задание условий правильности формы комнат
   const setRoomsValidity = () => {
@@ -150,6 +154,53 @@
     setTimeValidity(timestamp);
   };
 
+  // создание блока сообщения об успешной отправки
+  const createSuccessBlock = () => {
+    let newSuccess = successTemplate.cloneNode(true);
+    newSuccess.classList.add(`new__success`);
+    document.body.insertAdjacentElement(`afterbegin`, newSuccess);
+  };
+
+  // удаление блока сообщения об успешной отправки
+  const removeSuccessBlock = () => {
+    document.querySelector(`.new__success`).remove();
+  };
+
+  const onSuccessClick = (evt) => {
+    if (evt.button === 0 || evt.key === KEY_ESCAPE) {
+      removeSuccessBlock();
+      document.removeEventListener(`click`, onSuccessClick);
+    }
+  };
+
+  // сброс состояния формы
+  const resetForm = () => {
+    window.form.setDisabledAttribute();
+    map.classList.add(`map--faded`);
+    window.form.adForm.classList.add(`ad-form--disabled`);
+
+    titleInput.value = ``;
+    priceInput.value = ``;
+    descriptionInput.value = ``;
+  };
+
+  // обработчик отправки формы
+  const submitHandler = (evt) => {
+    evt.preventDefault();
+    if (document.querySelector(`.new__error`)) {
+      window.data.removeErrorBlock();
+    }
+
+    const onSuccess = () => {
+      createSuccessBlock();
+      setDisabledAttribute();
+      document.addEventListener(`click`, onSuccessClick);
+
+    };
+
+    window.backend.save(new FormData(adForm), onSuccess, window.data.errorHandler);
+  };
+
   window.form = {
     adForm,
     titleInput,
@@ -165,6 +216,8 @@
     onInputTitle,
     onChangeType,
     onInputPrice,
-    onSetTime
+    onSetTime,
+    submitHandler,
+    resetForm
   };
 })();

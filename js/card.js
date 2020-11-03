@@ -56,6 +56,16 @@
     mapPins.appendChild(window.pin.createPinsFragment());
   };
 
+  // удаление набора меток с карты
+  const removePinsList = () => {
+    const pins = mapPins.querySelectorAll(`.map__pin`);
+    for (let pin of pins) {
+      if (!pin.classList.contains(`map__pin--main`)) {
+        pin.remove();
+      }
+    }
+  };
+
   // рендер карточки объявления
   const renderCard = (pin) => {
     let newCard = document.querySelector(`.map__card`);
@@ -99,6 +109,7 @@
 
   window.card = {
     createPinsList,
+    removePinsList,
     renderCard
   };
 
