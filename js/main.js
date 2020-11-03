@@ -17,12 +17,9 @@
       window.form.adForm.classList.remove(`ad-form--disabled`);
       window.form.removeDisabledAttribute();
 
-      mapPinMain.removeEventListener(`mousedown`, onSetActiveMode);
-      mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
-
       window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
 
-      mapPinMain.removeEventListener(`mousedown`, onSetActiveMode);
+      mapPinMain.removeEventListener(`mouseup`, onSetActiveMode);
       mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
 
       window.form.adForm.addEventListener(`change`, window.form.onSetRooms);
@@ -36,10 +33,25 @@
     }
   };
 
-  // установка изначальных условий
-  mapPinMain.addEventListener(`mousedown`, onSetActiveMode);
-  mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
+  const onMouseUp = () => {
+    document.removeEventListener(`mousemove`, onMouseMove);
+    mapPinMain.removeEventListener(`mouseup`, onMouseUp);
+    mapPinMain.addEventListener(`mouseup`, onSetActiveMode);
+  };
 
+  const onMouseMove = () => {
+    mapPinMain.removeEventListener(`mouseup`, onSetActiveMode);
+    mapPinMain.addEventListener(`mouseup`, onMouseUp);
+  };
+
+  const onMouseDown = () => {
+    document.addEventListener(`mousemove`, onMouseMove);
+  };
+
+  // установка изначальных условий
+  mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
+  mapPinMain.addEventListener(`mousedown`, onMouseDown);
+  mapPinMain.addEventListener(`mouseup`, onSetActiveMode);
   mapPinMain.addEventListener(`keydown`, onSetActiveMode);
 
   window.form.setDisabledAttribute();
