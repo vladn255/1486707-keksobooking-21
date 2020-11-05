@@ -3,6 +3,7 @@
   const PIN_WIDTH = 40;
   const PIN_HEIGHT = 40;
   const PIN_MAIN_HEIGHT = 44;
+  const PIN_QUANTITY = 5;
 
   const pinTemplate = document.querySelector(`#pin`)
     .content
@@ -25,10 +26,14 @@
   // создание фрагмента с метками
   const createPinsFragment = () => {
     let pinFragment = document.createDocumentFragment();
+    let pinsCount = window.data.pinsList.length < PIN_QUANTITY
+      ? window.data.pinsList.length
+      : PIN_QUANTITY;
 
-    for (let i = 0; i < window.data.pinsList.length; i++) {
+    for (let i = 0; i < pinsCount; i++) {
       pinFragment.appendChild(createPin(window.data.pinsList[i], i));
     }
+
     return pinFragment;
   };
 

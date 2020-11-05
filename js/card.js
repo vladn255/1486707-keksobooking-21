@@ -100,8 +100,8 @@
       newCard.querySelector(`.popup__photos`).innerHTML = ``;
       newCard.querySelector(`.popup__photos`).appendChild(createPhotoFragment(pin.offer.photos));
     }
-    if (pin.avatar) {
-      newCard.querySelector(`.popup__avatar`).src = pin.avatar;
+    if (pin.author.avatar) {
+      newCard.querySelector(`.popup__avatar`).src = pin.author.avatar;
     }
 
     return newCard;

@@ -5,7 +5,6 @@
   const TITLE_MAX_LENGTH = 100;
   const PIN_WIDTH = window.pin.PIN_WIDTH;
   const PIN_HEIGHT = window.pin.PIN_HEIGHT;
-  const KEY_ESCAPE = `Escape`;
 
   const adForm = document.querySelector(`.ad-form`);
   const map = document.querySelector(`.map`);
@@ -161,18 +160,6 @@
     document.body.insertAdjacentElement(`afterbegin`, newSuccess);
   };
 
-  // удаление блока сообщения об успешной отправки
-  const removeSuccessBlock = () => {
-    document.querySelector(`.new__success`).remove();
-  };
-
-  const onSuccessClick = (evt) => {
-    if (evt.button === 0 || evt.key === KEY_ESCAPE) {
-      removeSuccessBlock();
-      document.removeEventListener(`click`, onSuccessClick);
-    }
-  };
-
   // сброс состояния формы
   const resetForm = () => {
     window.form.setDisabledAttribute();
@@ -182,23 +169,6 @@
     titleInput.value = ``;
     priceInput.value = ``;
     descriptionInput.value = ``;
-  };
-
-  // обработчик отправки формы
-  const submitHandler = (evt) => {
-    evt.preventDefault();
-    if (document.querySelector(`.new__error`)) {
-      window.data.removeErrorBlock();
-    }
-
-    const onSuccess = () => {
-      createSuccessBlock();
-      setDisabledAttribute();
-      document.addEventListener(`click`, onSuccessClick);
-
-    };
-
-    window.backend.save(new FormData(adForm), onSuccess, window.data.errorHandler);
   };
 
   window.form = {
@@ -217,7 +187,7 @@
     onChangeType,
     onInputPrice,
     onSetTime,
-    submitHandler,
-    resetForm
+    resetForm,
+    createSuccessBlock
   };
 })();

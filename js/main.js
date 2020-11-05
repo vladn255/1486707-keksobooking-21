@@ -1,12 +1,14 @@
 'use strict';
 (function () {
   const KEY_ENTER = `Enter`;
+  const KEY_ESCAPE = `Escape`;
   const PIN_WIDTH = window.pin.PIN_WIDTH;
   const PIN_MAIN_HEIGHT = window.pin.PIN_MAIN_HEIGHT;
   const map = document.querySelector(`.map`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
   const formReset = document.querySelector(`.ad-form__reset`);
+  const housingType = map.querySelector(`#housing-type`);
 
   // обработчик события выставления активного состояния
   const onSetActiveMode = (evt) => {
@@ -61,10 +63,46 @@
     window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
   };
 
+  // обработчик нажатия на экране успешной отправки формы
+  const onSuccessClick = (evt) => {
+    if (evt.button === 0 || evt.key === KEY_ESCAPE) {
+      document.querySelector(`.new__success`).remove();
+      document.removeEventListener(`click`, onSuccessClick);
+      document.removeEventListener(`keydown`, onSuccessClick);
+    }
+  };
+
+  // обработчик отправки формы
+  const submitHandler = (evt) => {
+    evt.preventDefault();
+    if (document.querySelector(`.new__error`)) {
+      window.data.removeErrorBlock();
+    }
+
+    const onSuccess = () => {
+      window.form.createSuccessBlock();
+      setInitialState();
+      document.addEventListener(`click`, onSuccessClick);
+      document.addEventListener(`keydown`, onSuccessClick);
+    };
+
+    window.backend.save(new FormData(adForm), onSuccess, window.data.errorHandler);
+  };
+
+  // обработчик изменения состояния фильтра
+  const onChangeFilter = () => {
+    window.card.removePinsList();
+    window.data.filterPins();
+    window.card.createPinsList();
+    window.map.closeCardPopup();
+  };
+
+  housingType.addEventListener(`change`, onChangeFilter);
+
   setInitialState();
 
-  adForm.addEventListener(`submit`, window.form.submitHandler);
-  formReset.addEventListener(`click`, window.form.onReset);
+  adForm.addEventListener(`submit`, submitHandler);
+  formReset.addEventListener(`click`, window.form.resetForm);
 
   window.form.setDisabledAttribute();
 

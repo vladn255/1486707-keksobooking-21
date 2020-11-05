@@ -28,6 +28,7 @@
 
     mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
     map.addEventListener(`keydown`, onCloseCardPopup);
+
   };
 
   // обработчик события для показа карточки
@@ -52,7 +53,8 @@
     }
   };
   window.map = {
-    addShowCardListeners
+    addShowCardListeners,
+    closeCardPopup
   };
 
 })();
