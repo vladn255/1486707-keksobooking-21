@@ -11,6 +11,8 @@
   const MAP_MAX_COORD_Y = mapOverlay.offsetTop + MAP_HEIGHT_MAX;
   const MAP_MIN_COORD_X = mapOverlay.offsetLeft;
   const MAP_MAX_COORD_X = mapOverlay.offsetLeft + mapOverlay.offsetWidth;
+  const MAP_PIN_MAIN_INITIAL_X = parseInt(mapPinMain.offsetLeft, 10);
+  const MAP_PIN_MAIN_INITIAL_Y = parseInt(mapPinMain.offsetTop, 10);
 
   let startCoords = {
     x: 0,
@@ -71,8 +73,14 @@
     document.addEventListener(`mouseup`, onMouseUp);
   };
 
+  const setInitialPosition = () => {
+    mapPinMain.style.top = `${MAP_PIN_MAIN_INITIAL_Y}px`;
+    mapPinMain.style.left = `${MAP_PIN_MAIN_INITIAL_X}px`;
+  };
+
   window.move = {
-    onTraceMainPin
+    onTraceMainPin,
+    setInitialPosition
   };
 
 })();
