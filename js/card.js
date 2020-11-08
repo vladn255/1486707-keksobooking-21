@@ -58,11 +58,9 @@
 
   // удаление набора меток с карты
   const removePinsList = () => {
-    const pins = mapPins.querySelectorAll(`.map__pin`);
-    for (let pin of pins) {
-      if (!pin.classList.contains(`map__pin--main`)) {
-        pin.remove();
-      }
+    const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    for (let pin of mapPinsList) {
+      pin.remove();
     }
   };
 

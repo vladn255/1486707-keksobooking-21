@@ -42,7 +42,9 @@
 
   // команда скрытия карточки объявления
   const closeCardPopup = () => {
-    document.querySelector(`.map__card`).classList.add(`visually-hidden`);
+    if (document.querySelector(`.map__card`)) {
+      document.querySelector(`.map__card`).classList.add(`visually-hidden`);
+    }
     addShowCardListeners();
   };
 
