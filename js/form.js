@@ -160,11 +160,16 @@
     document.body.insertAdjacentElement(`afterbegin`, newSuccess);
   };
 
+  // удаление блока сообщения об успешной отправки
+  const removeSuccessBlock = () => {
+    document.querySelector(`.new__success`).remove();
+  };
+
   // сброс состояния формы
   const resetForm = () => {
-    window.form.setDisabledAttribute();
+    setDisabledAttribute();
     map.classList.add(`map--faded`);
-    window.form.adForm.classList.add(`ad-form--disabled`);
+    adForm.classList.add(`ad-form--disabled`);
 
     titleInput.value = ``;
     priceInput.value = ``;
@@ -187,7 +192,8 @@
     onChangeType,
     onInputPrice,
     onSetTime,
-    resetForm,
-    createSuccessBlock
+    createSuccessBlock,
+    removeSuccessBlock,
+    resetForm
   };
 })();

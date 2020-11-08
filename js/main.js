@@ -52,21 +52,10 @@
     document.addEventListener(`mousemove`, onMouseMove);
   };
 
-  // установка изначальных условий
-  const setInitialState = () => {
-    mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
-    mapPinMain.addEventListener(`mousedown`, onMouseDown);
-    mapPinMain.addEventListener(`mouseup`, onSetActiveMode);
-    mapPinMain.addEventListener(`keydown`, onSetActiveMode);
-    window.card.removePinsList();
-    window.form.resetForm();
-    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
-  };
-
-  // обработчик нажатия на экране успешной отправки формы
+  // обработчик клика на экране успешной отправки
   const onSuccessClick = (evt) => {
     if (evt.button === 0 || evt.key === KEY_ESCAPE) {
-      document.querySelector(`.new__success`).remove();
+      window.form.removeSuccessBlock();
       document.removeEventListener(`click`, onSuccessClick);
       document.removeEventListener(`keydown`, onSuccessClick);
     }
@@ -81,12 +70,29 @@
 
     const onSuccess = () => {
       window.form.createSuccessBlock();
+      mapPinMain.removeEventListener(`mousedown`, window.move.onTraceMainPin);
+      mapPinMain.removeEventListener(`mousedown`, onMouseDown);
+      mapPinMain.removeEventListener(`mouseup`, onSetActiveMode);
+      mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
       setInitialState();
+
       document.addEventListener(`click`, onSuccessClick);
       document.addEventListener(`keydown`, onSuccessClick);
     };
 
     window.backend.save(new FormData(adForm), onSuccess, window.data.errorHandler);
+  };
+
+  // установка изначальных условий
+  const setInitialState = () => {
+    mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
+    mapPinMain.addEventListener(`mousedown`, onMouseDown);
+    mapPinMain.addEventListener(`mouseup`, onSetActiveMode);
+    mapPinMain.addEventListener(`keydown`, onSetActiveMode);
+    window.card.removePinsList();
+    window.form.resetForm();
+    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
+    window.move.setInitialPosition();
   };
 
   // обработчик изменения состояния фильтра
@@ -102,7 +108,7 @@
   setInitialState();
 
   adForm.addEventListener(`submit`, submitHandler);
-  formReset.addEventListener(`click`, window.form.resetForm);
+  formReset.addEventListener(`click`, setInitialState);
 
   window.form.setDisabledAttribute();
 
