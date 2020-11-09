@@ -9,6 +9,10 @@
   const adForm = document.querySelector(`.ad-form`);
   const formReset = document.querySelector(`.ad-form__reset`);
   const housingType = map.querySelector(`#housing-type`);
+  const housingPrice = map.querySelector(`#housing-price`);
+  const housingRooms = map.querySelector(`#housing-rooms`);
+  const housingGuests = map.querySelector(`#housing-guests`);
+  const housingFeatures = map.querySelector(`#housing-features`);
 
   // обработчик события выставления активного состояния
   const onSetActiveMode = (evt) => {
@@ -103,7 +107,11 @@
     window.map.closeCardPopup();
   };
 
-  housingType.addEventListener(`change`, onChangeFilter);
+  housingType.addEventListener(`change`, window.backend.debounce(onChangeFilter));
+  housingPrice.addEventListener(`change`, window.backend.debounce(onChangeFilter));
+  housingRooms.addEventListener(`change`, window.backend.debounce(onChangeFilter));
+  housingGuests.addEventListener(`change`, window.backend.debounce(onChangeFilter));
+  housingFeatures.addEventListener(`change`, window.backend.debounce(onChangeFilter));
 
   setInitialState();
 

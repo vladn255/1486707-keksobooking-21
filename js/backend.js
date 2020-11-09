@@ -7,6 +7,7 @@
   const StatusCode = {
     OK: 200
   };
+  const DEBOUNCE_INTERVAL = 500;
 
   /* функция проверки наличия ошибок при загрузке:
     параметр1: XMLHttpRequest,
@@ -56,8 +57,23 @@
     xhr.send(data);
   };
 
+  // функция установки таймаута для устранения дребезга
+  const debounce = (cb) => {
+    let lastTimeout = null;
+
+    return (...parameters) => {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(() => {
+        cb(...parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.backend = {
     load,
-    save
+    save,
+    debounce
   };
 })();
