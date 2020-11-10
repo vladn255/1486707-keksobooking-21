@@ -63,22 +63,29 @@
   };
 
   // проверка совпадения фильтра типа жилья заданному
-  const checkHousingType = (pinsArray) => {
+  const isHousingType = (element) => {
     const housingTypeValue = housingType.value;
     if (housingTypeValue !== `any`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return pinElement.offer.type === housingTypeValue;
-      });
+      return element.offer.type === housingTypeValue
+        ? true
+        : false;
+
     } else {
-      window.data.pinsList = initialPinsList;
+      return true;
     }
-    return pinsList;
   };
 
   // фильтр массива меток по заданным условиям
   const filterPins = () => {
+    const filteredArray = [];
 
-    checkHousingType(initialPinsList);
+    initialPinsList.forEach((pin) => {
+      if (isHousingType(pin)) {
+        filteredArray.push(pin);
+      }
+    });
+
+    window.data.pinsList = filteredArray;
   };
 
   window.backend.load(successHandler, errorHandler);
