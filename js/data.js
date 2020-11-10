@@ -71,68 +71,64 @@
   };
 
   // проверка совпадения фильтра типа жилья заданному
-  const checkHousingType = (pinsArray) => {
+  const isHousingType = (element) => {
     const housingTypeValue = housingType.value;
     if (housingTypeValue !== `any`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return pinElement.offer.type === housingTypeValue;
-      });
+      return element.offer.type === housingTypeValue
+        ? true
+        : false;
+
     } else {
-      window.data.pinsList = initialPinsList;
+      return true;
     }
-    return pinsList;
   };
 
   // проверка совпадения фильтра ценового диапазона
-  const checkHousingPrice = (pinsArray) => {
+  const isHousingPrice = (element) => {
     const housingPriceValue = housingPrice.value;
     if (housingPriceValue === `middle`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return (pinElement.offer.price >= priceRangeList.min && pinElement.offer.price < priceRangeList.max);
-      });
+      return (element.offer.price >= priceRangeList.min && element.offer.price < priceRangeList.max)
+        ? true
+        : false;
     } else if (housingPriceValue === `low`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return (pinElement.offer.price < priceRangeList.min);
-      });
+      return element.offer.price < priceRangeList.min
+        ? true
+        : false;
     } else if (housingPriceValue === `high`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return (pinElement.offer.price >= priceRangeList.max);
-      });
-    } else if (housingPriceValue === `any`) {
-      window.data.pinsList = initialPinsList;
+      return element.offer.price >= priceRangeList.max
+        ? true
+        : false;
+    } else {
+      return true;
     }
-
-    return pinsList;
   };
 
   // проверка совпадения фильтра количества комнат
-  const checkHousingRooms = (pinsArray) => {
+  const isHousingRooms = (element) => {
     const housingRoomsValue = housingRooms.value;
     if (housingRoomsValue !== `any`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return pinElement.offer.rooms === parseInt(housingRoomsValue, 10);
-      });
+      return element.offer.rooms === parseInt(housingRoomsValue, 10)
+        ? true
+        : false;
     } else {
-      window.data.pinsList = initialPinsList;
+      return true;
     }
-    return pinsList;
   };
 
   // проверка совпадения фильтра количества гостей
-  const checkHousingGuests = (pinsArray) => {
+  const isHousingGuests = (element) => {
     const housingGuestsValue = housingGuests.value;
     if (housingGuestsValue !== `any`) {
-      window.data.pinsList = pinsArray.filter((pinElement) => {
-        return pinElement.offer.guests === parseInt(housingGuestsValue, 10);
-      });
+      return element.offer.guests === parseInt(housingGuestsValue, 10)
+        ? true
+        : false;
     } else {
-      window.data.pinsList = initialPinsList;
+      return true;
     }
-    return pinsList;
   };
 
   // проверка совпадения фильтра дополнительных удобств
-  const checkHousingFeatures = (pinsArray) => {
+  const isHousingFeatures = (element) => {
     const housingFeaturesChecked = [];
     const housingFeaturesList = housingFeatures.querySelectorAll(`.map__checkbox`);
     for (let featureInput of housingFeaturesList) {
@@ -141,21 +137,27 @@
         housingFeaturesChecked.push(featureInputLabel.slice(7));
       }
     }
-    window.data.pinsList = pinsArray.filter((pinElement) => {
-      return housingFeaturesChecked.every((element) => {
-        return pinElement.offer.features.includes(element);
-      });
+    return housingFeaturesChecked.every((feature) => {
+      return element.offer.features.includes(feature);
     });
-    return pinsList;
+
   };
 
   // фильтр массива меток по заданным условиям
   const filterPins = () => {
-    checkHousingType(initialPinsList);
-    checkHousingPrice(initialPinsList);
-    checkHousingRooms(initialPinsList);
-    checkHousingGuests(initialPinsList);
-    checkHousingFeatures(initialPinsList);
+    const filteredArray = [];
+
+    initialPinsList.forEach((pin) => {
+      if (isHousingType(pin)
+        && isHousingPrice(pin)
+        && isHousingRooms(pin)
+        && isHousingGuests(pin)
+        && isHousingFeatures(pin)) {
+        filteredArray.push(pin);
+      }
+    });
+
+    window.data.pinsList = filteredArray;
   };
 
   window.backend.load(successHandler, errorHandler);
