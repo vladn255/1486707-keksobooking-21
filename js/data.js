@@ -82,17 +82,11 @@
   const isHousingPrice = (element) => {
     const housingPriceValue = housingPrice.value;
     if (housingPriceValue === `middle`) {
-      return (element.offer.price >= priceRangeList.min && element.offer.price < priceRangeList.max)
-        ? true
-        : false;
+      return (element.offer.price >= priceRangeList.min && element.offer.price < priceRangeList.max);
     } else if (housingPriceValue === `low`) {
-      return element.offer.price < priceRangeList.min
-        ? true
-        : false;
+      return element.offer.price < priceRangeList.min;
     } else if (housingPriceValue === `high`) {
-      return element.offer.price >= priceRangeList.max
-        ? true
-        : false;
+      return element.offer.price >= priceRangeList.max;
     } else {
       return true;
     }
@@ -102,9 +96,7 @@
   const isHousingRooms = (element) => {
     const housingRoomsValue = housingRooms.value;
     if (housingRoomsValue !== `any`) {
-      return element.offer.rooms === parseInt(housingRoomsValue, 10)
-        ? true
-        : false;
+      return element.offer.rooms === parseInt(housingRoomsValue, 10);
     } else {
       return true;
     }
@@ -114,9 +106,7 @@
   const isHousingGuests = (element) => {
     const housingGuestsValue = housingGuests.value;
     if (housingGuestsValue !== `any`) {
-      return element.offer.guests === parseInt(housingGuestsValue, 10)
-        ? true
-        : false;
+      return element.offer.guests === parseInt(housingGuestsValue, 10);
     } else {
       return true;
     }
@@ -142,18 +132,16 @@
   const filterPins = () => {
     const filteredArray = [];
 
-    initialPinsList.forEach((pin) => {
-      if (isHousingType(pin)
-        && isHousingPrice(pin)
-        && isHousingRooms(pin)
-        && isHousingGuests(pin)
-        && isHousingFeatures(pin)) {
     for (let i = 0; i < initialPinsList.length; i++) {
       if (filteredArray.length === PIN_QUANTITY) {
         break;
       }
       let pin = initialPinsList[i];
-      if (isHousingType(pin)) {
+      if (isHousingType(pin)
+        && isHousingPrice(pin)
+        && isHousingRooms(pin)
+        && isHousingGuests(pin)
+        && isHousingFeatures(pin)) {
         filteredArray.push(pin);
       }
     }
