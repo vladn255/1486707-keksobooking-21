@@ -1,18 +1,21 @@
 'use strict';
 (function () {
   const KEY_ESCAPE = `Escape`;
+  const PIN_QUANTITY = 5;
   const typesListPriceMin = {
     'bungalow': 0,
     'flat': 1000,
     'house': 5000,
     'palace': 10000
   };
+  const map = document.querySelector(`.map`);
+  const housingType = map.querySelector(`#housing-type`);
 
   const errorTemplate = document.querySelector(`#error`)
     .content
     .querySelector(`.error`);
 
-  const pinsList = [];
+  const initialPinsList = [];
 
   // создание блока ошибки
   const createErrorBlock = (errorMessage) => {
@@ -29,10 +32,10 @@
     document.querySelector(`.new__error`).remove();
   };
 
-  // обработчик успешного получения данных об авторах с сервера - добавляет их в массив pinsList
+  // обработчик успешного получения данных об авторах с сервера - добавляет их в массив initialPinsList
   const successHandler = (authors) => {
     for (let author of authors) {
-      pinsList.push(author);
+      initialPinsList.push(author);
     }
     if (document.querySelector(`.new__error`)) {
       document.querySelector(`.new__error`).querySelector(`.error__button`)
@@ -41,6 +44,7 @@
     }
   };
 
+  // обработчик получения ошибки при получении данных с сервера
   const errorHandler = (textMessage) => {
     if (document.querySelector(`.new__error`)) {
       removeErrorBlock();
@@ -58,12 +62,37 @@
     document.addEventListener(`keydown`, onCloseError);
   };
 
+  // проверка совпадения фильтра типа жилья заданному
+  const isHousingType = (element) => {
+    const housingTypeValue = housingType.value;
+    return housingTypeValue === `any`
+      ? true
+      : element.offer.type === housingTypeValue;
+  };
+
+  // фильтр массива меток по заданным условиям
+  const filterPins = () => {
+    const filteredArray = [];
+
+    for (let i = 0; i < initialPinsList.length; i++) {
+      if (filteredArray.length === PIN_QUANTITY) {
+        break;
+      }
+      let pin = initialPinsList[i];
+      if (isHousingType(pin)) {
+        filteredArray.push(pin);
+      }
+    }
+
+    return filteredArray;
+  };
+
   window.backend.load(successHandler, errorHandler);
 
   window.data = {
     typesListPriceMin,
-    pinsList,
     removeErrorBlock,
-    errorHandler
+    errorHandler,
+    filterPins
   };
 })();

@@ -19,7 +19,7 @@
 
   // команда показа карточки
   const showCard = (pinNumber) => {
-    const cardNumber = window.data.pinsList[pinNumber];
+    const cardNumber = window.data.filterPins()[pinNumber];
     insertCard(window.card.renderCard(cardNumber));
 
     const mapCardPopup = document.querySelector(`.map__card`);
@@ -28,6 +28,7 @@
 
     mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
     map.addEventListener(`keydown`, onCloseCardPopup);
+
   };
 
   // обработчик события для показа карточки
@@ -41,7 +42,9 @@
 
   // команда скрытия карточки объявления
   const closeCardPopup = () => {
-    document.querySelector(`.map__card`).classList.add(`visually-hidden`);
+    if (document.querySelector(`.map__card`)) {
+      document.querySelector(`.map__card`).classList.add(`visually-hidden`);
+    }
     addShowCardListeners();
   };
 
@@ -52,7 +55,8 @@
     }
   };
   window.map = {
-    addShowCardListeners
+    addShowCardListeners,
+    closeCardPopup
   };
 
 })();

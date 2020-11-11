@@ -8,6 +8,7 @@
   const mapPinMain = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
   const formReset = document.querySelector(`.ad-form__reset`);
+  const housingType = map.querySelector(`#housing-type`);
 
   // обработчик события выставления активного состояния
   const onSetActiveMode = (evt) => {
@@ -93,6 +94,16 @@
     window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
     window.move.setInitialPosition();
   };
+
+  // обработчик изменения состояния фильтра
+  const onChangeFilter = () => {
+    window.card.removePinsList();
+    window.data.filterPins();
+    window.card.createPinsList();
+    window.map.closeCardPopup();
+  };
+
+  housingType.addEventListener(`change`, onChangeFilter);
 
   setInitialState();
 

@@ -58,11 +58,9 @@
 
   // удаление набора меток с карты
   const removePinsList = () => {
-    const pins = mapPins.querySelectorAll(`.map__pin`);
-    for (let pin of pins) {
-      if (!pin.classList.contains(`map__pin--main`)) {
-        pin.remove();
-      }
+    const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    for (let pin of mapPinsList) {
+      pin.remove();
     }
   };
 
@@ -100,8 +98,8 @@
       newCard.querySelector(`.popup__photos`).innerHTML = ``;
       newCard.querySelector(`.popup__photos`).appendChild(createPhotoFragment(pin.offer.photos));
     }
-    if (pin.avatar) {
-      newCard.querySelector(`.popup__avatar`).src = pin.avatar;
+    if (pin.author && pin.author.avatar) {
+      newCard.querySelector(`.popup__avatar`).src = pin.author.avatar;
     }
 
     return newCard;
