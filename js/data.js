@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   const KEY_ESCAPE = `Escape`;
+  const PIN_QUANTITY = 5;
   const typesListPriceMin = {
     'bungalow': 0,
     'flat': 1000,
@@ -15,7 +16,6 @@
     .querySelector(`.error`);
 
   const initialPinsList = [];
-  let pinsList = initialPinsList;
 
   // создание блока ошибки
   const createErrorBlock = (errorMessage) => {
@@ -65,34 +65,32 @@
   // проверка совпадения фильтра типа жилья заданному
   const isHousingType = (element) => {
     const housingTypeValue = housingType.value;
-    if (housingTypeValue !== `any`) {
-      return element.offer.type === housingTypeValue
-        ? true
-        : false;
-
-    } else {
-      return true;
-    }
+    return housingTypeValue === `any`
+      ? true
+      : element.offer.type === housingTypeValue;
   };
 
   // фильтр массива меток по заданным условиям
   const filterPins = () => {
     const filteredArray = [];
 
-    initialPinsList.forEach((pin) => {
+    for (let i = 0; i < initialPinsList.length; i++) {
+      if (filteredArray.length === PIN_QUANTITY) {
+        break;
+      }
+      let pin = initialPinsList[i];
       if (isHousingType(pin)) {
         filteredArray.push(pin);
       }
-    });
+    }
 
-    window.data.pinsList = filteredArray;
+    return filteredArray;
   };
 
   window.backend.load(successHandler, errorHandler);
 
   window.data = {
     typesListPriceMin,
-    pinsList,
     removeErrorBlock,
     errorHandler,
     filterPins

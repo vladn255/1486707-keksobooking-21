@@ -26,12 +26,12 @@
   // создание фрагмента с метками
   const createPinsFragment = () => {
     let pinFragment = document.createDocumentFragment();
-    let pinsCount = window.data.pinsList.length < PIN_QUANTITY
-      ? window.data.pinsList.length
+    let pinsCount = window.data.filterPins().length < PIN_QUANTITY
+      ? window.data.filterPins().length
       : PIN_QUANTITY;
 
     for (let i = 0; i < pinsCount; i++) {
-      pinFragment.appendChild(createPin(window.data.pinsList[i], i));
+      pinFragment.appendChild(createPin(window.data.filterPins()[i], i));
     }
 
     return pinFragment;
@@ -41,6 +41,7 @@
     PIN_WIDTH,
     PIN_HEIGHT,
     PIN_MAIN_HEIGHT,
+    PIN_QUANTITY,
 
     createPinsFragment
   };
