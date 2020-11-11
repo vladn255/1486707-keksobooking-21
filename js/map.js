@@ -19,7 +19,7 @@
 
   // команда показа карточки
   const showCard = (pinNumber) => {
-    const cardNumber = window.data.pinsList[pinNumber];
+    const cardNumber = window.data.filterPins()[pinNumber];
     insertCard(window.card.renderCard(cardNumber));
 
     const mapCardPopup = document.querySelector(`.map__card`);
