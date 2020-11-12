@@ -9,7 +9,6 @@
     .content
     .querySelector(`.map__pin`);
 
-
   // создание метки на карте
   const createPin = (pinInfo, index) => {
     let newPinItem = pinTemplate.cloneNode(true);
@@ -25,13 +24,14 @@
 
   // создание фрагмента с метками
   const createPinsFragment = () => {
+    const pinsList = window.data.filterPins();
     let pinFragment = document.createDocumentFragment();
-    let pinsCount = window.data.filterPins().length < PIN_QUANTITY
-      ? window.data.filterPins().length
+    let pinsCount = pinsList.length < PIN_QUANTITY
+      ? pinsList.length
       : PIN_QUANTITY;
 
     for (let i = 0; i < pinsCount; i++) {
-      pinFragment.appendChild(createPin(window.data.filterPins()[i], i));
+      pinFragment.appendChild(createPin(pinsList[i], i));
     }
 
     return pinFragment;

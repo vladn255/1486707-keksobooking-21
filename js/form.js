@@ -24,9 +24,6 @@
   const checkinInput = adForm.querySelector(`#timein`);
   const checkoutInput = adForm.querySelector(`#timeout`);
   const descriptionInput = adForm.querySelector(`#description`);
-  const successTemplate = document.querySelector(`#success`)
-    .content
-    .querySelector(`.success`);
 
   const typesListPriceMin = window.data.typesListPriceMin;
 
@@ -153,17 +150,6 @@
     setTimeValidity(timestamp);
   };
 
-  // создание блока сообщения об успешной отправки
-  const createSuccessBlock = () => {
-    let newSuccess = successTemplate.cloneNode(true);
-    newSuccess.classList.add(`new__success`);
-    document.body.insertAdjacentElement(`afterbegin`, newSuccess);
-  };
-
-  // удаление блока сообщения об успешной отправки
-  const removeSuccessBlock = () => {
-    document.querySelector(`.new__success`).remove();
-  };
 
   // сброс состояния формы
   const resetForm = () => {
@@ -177,13 +163,6 @@
   };
 
   window.form = {
-    adForm,
-    titleInput,
-    priceInput,
-    typeInput,
-    checkinInput,
-    checkoutInput,
-
     setDisabledAttribute,
     removeDisabledAttribute,
     setAddressValue,
@@ -192,8 +171,6 @@
     onChangeType,
     onInputPrice,
     onSetTime,
-    createSuccessBlock,
-    removeSuccessBlock,
     resetForm
   };
 })();
