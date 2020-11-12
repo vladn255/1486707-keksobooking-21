@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-  const KEY_ESCAPE = `Escape`;
   const map = document.querySelector(`.map`);
   const mapPins = document.querySelector(`.map__pins`);
 
@@ -19,16 +18,18 @@
 
   // команда показа карточки
   const showCard = (pinNumber) => {
-    const cardNumber = window.data.filterPins()[pinNumber];
-    insertCard(window.card.renderCard(cardNumber));
+    const cardNumberArray = window.data.filterPins();
+    if (cardNumberArray.length !== 0) {
+      const cardNumber = cardNumberArray[pinNumber];
+      insertCard(window.card.renderCard(cardNumber));
 
-    const mapCardPopup = document.querySelector(`.map__card`);
-    const mapCardPopupClose = mapCardPopup.querySelector(`.popup__close`);
-    mapCardPopup.classList.remove(`visually-hidden`);
+      const mapCardPopup = document.querySelector(`.map__card`);
+      const mapCardPopupClose = mapCardPopup.querySelector(`.popup__close`);
+      mapCardPopup.classList.remove(`visually-hidden`);
 
-    mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
-    map.addEventListener(`keydown`, onCloseCardPopup);
-
+      mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
+      map.addEventListener(`keydown`, onCloseCardPopup);
+    }
   };
 
   // обработчик события для показа карточки
@@ -50,7 +51,7 @@
 
   // обработчик события для скрытия карточки
   const onCloseCardPopup = (evt) => {
-    if ((evt.button === 0) || (evt.key === KEY_ESCAPE)) {
+    if ((evt.button === 0) || (evt.key === window.util.KEY_ESCAPE)) {
       closeCardPopup();
     }
   };

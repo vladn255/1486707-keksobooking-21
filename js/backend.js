@@ -9,37 +9,30 @@
   };
   const DEBOUNCE_INTERVAL = 500;
 
-  /* функция проверки наличия ошибок при загрузке:
-    параметр1: XMLHttpRequest,
-    параметр2: обработчик при загрузке данных,
-    параметр3: обработчик при ошибке
-  */
-  const checkIfErrors = (request, onLoadSuccess, onError) => {
-    request.addEventListener(`load`, function () {
-      if (request.status === StatusCode.OK) {
-        onLoadSuccess(request.response);
-      } else {
-        onError(`Статус ответа: ` + request.status + ` ` + request.statusText);
-      }
-    });
-
-    request.addEventListener(`error`, function () {
-      onError(`Произошла ошибка соединения`);
-    });
-    request.addEventListener(`timeout`, function () {
-      onError(`Запрос не успел выполниться за ` + request.timeout + `мс`);
-    });
-  };
-
   /* функция получения данных с сервера:
-    параметр1: обработчик при загрузке данных,
-    параметр2: обработчик при ошибке
-   */
+   параметр1: обработчик при загрузке данных,
+   параметр2: обработчик при ошибке
+  */
   const load = (onLoad, onLoadError) => {
     let xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
-    checkIfErrors(xhr, onLoad, onLoadError);
+    const onCheckIfErrors = () => {
+      if (xhr.status === StatusCode.OK) {
+        onLoad(xhr.response);
+      } else {
+        onLoadError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+      }
+    };
+
+    xhr.addEventListener(`load`, onCheckIfErrors);
+
+    xhr.addEventListener(`error`, function () {
+      onLoadError(`Произошла ошибка соединения`);
+    });
+    xhr.addEventListener(`timeout`, function () {
+      onLoadError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
+    });
 
     xhr.open(`GET`, URL_GET);
     xhr.timeout = TIMEOUT_IN_MS;
@@ -50,7 +43,22 @@
     let xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
-    checkIfErrors(xhr, onSave, onSaveError);
+    const onCheckIfErrors = () => {
+      if (xhr.status === StatusCode.OK) {
+        onSave(xhr.response);
+      } else {
+        onSaveError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+      }
+    };
+
+    xhr.addEventListener(`load`, onCheckIfErrors);
+
+    xhr.addEventListener(`error`, function () {
+      onSaveError(`Произошла ошибка соединения`);
+    });
+    xhr.addEventListener(`timeout`, function () {
+      onSaveError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
+    });
 
     xhr.open(`POST`, URL_POST);
     xhr.timeout = TIMEOUT_IN_MS;

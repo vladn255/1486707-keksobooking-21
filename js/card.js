@@ -5,16 +5,15 @@
     .content;
 
   const typesListTranslations = {
-    'bungalow': `Бунгало`,
-    'flat': `Квартира`,
-    'house': `Дом`,
-    'palace': `Дворец`
+    bungalow: `Бунгало`,
+    flat: `Квартира`,
+    house: `Дом`,
+    palace: `Дворец`
   };
 
   // получение перевода типа жилья из карты значений
   const getTypeTranslation = (type) => {
-    let newTypeTranslation = typesListTranslations[type];
-    return newTypeTranslation;
+    return typesListTranslations[type];
   };
 
   // создание списка удобств
@@ -53,7 +52,8 @@
 
   // создание и вставка на карту набора меток
   const createPinsList = () => {
-    mapPins.appendChild(window.pin.createPinsFragment());
+    const pinsFragment = window.pin.createPinsFragment();
+    mapPins.appendChild(pinsFragment);
   };
 
   // удаление набора меток с карты
