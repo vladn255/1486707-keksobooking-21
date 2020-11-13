@@ -1,114 +1,114 @@
 'use strict';
-(function () {
-  const mapPins = document.querySelector(`.map__pins`);
-  const cardTemplate = document.querySelector(`#card`)
-    .content;
 
-  const typesListTranslations = {
-    bungalow: `Бунгало`,
-    flat: `Квартира`,
-    house: `Дом`,
-    palace: `Дворец`
-  };
+const mapPins = document.querySelector(`.map__pins`);
+const cardTemplate = document.querySelector(`#card`)
+  .content;
 
-  // получение перевода типа жилья из карты значений
-  const getTypeTranslation = (type) => {
-    return typesListTranslations[type];
-  };
+const typesListTranslations = {
+  bungalow: `Бунгало`,
+  flat: `Квартира`,
+  house: `Дом`,
+  palace: `Дворец`
+};
 
-  // создание списка удобств
-  const createFeaturesItem = (featuresObjectItem) => {
-    let newFeaturesItem = document.createElement(`li`);
-    newFeaturesItem.classList.add(`popup__feature`);
-    newFeaturesItem.classList.add(`popup__feature--${featuresObjectItem}`);
+// получение перевода типа жилья из карты значений
+const getTypeTranslation = (type) => {
+  return typesListTranslations[type];
+};
 
-    return newFeaturesItem;
-  };
+// создание списка удобств
+const createFeaturesItem = (featuresObjectItem) => {
+  let newFeaturesItem = document.createElement(`li`);
+  newFeaturesItem.classList.add(`popup__feature`);
+  newFeaturesItem.classList.add(`popup__feature--${featuresObjectItem}`);
 
-  // создание фрагмента со списком удобств
-  const createFeaturesFragment = (featuresObject) => {
-    let featuresFragment = document.createDocumentFragment();
-    for (let feature of featuresObject) {
-      featuresFragment.appendChild(createFeaturesItem(feature));
-    }
-    return featuresFragment;
-  };
+  return newFeaturesItem;
+};
 
-  // генерирование фотографии по переданному адресу
-  const generatePhotoItem = (photoItem) => {
-    let newPhotoItem = cardTemplate.querySelector(`.popup__photo`).cloneNode(true);
-    newPhotoItem.src = photoItem;
-    return newPhotoItem;
-  };
+// создание фрагмента со списком удобств
+const createFeaturesFragment = (featuresObject) => {
+  let featuresFragment = document.createDocumentFragment();
+  for (let feature of featuresObject) {
+    featuresFragment.appendChild(createFeaturesItem(feature));
+  }
+  return featuresFragment;
+};
 
-  // вставка сгенерированных фотографий во фрагмент
-  const createPhotoFragment = (featuresObject) => {
-    let photoFragment = document.createDocumentFragment();
-    for (let featureObject of featuresObject) {
-      photoFragment.appendChild(generatePhotoItem(featureObject));
-    }
-    return photoFragment;
-  };
+// генерирование фотографии по переданному адресу
+const generatePhotoItem = (photoItem) => {
+  let newPhotoItem = cardTemplate.querySelector(`.popup__photo`).cloneNode(true);
+  newPhotoItem.src = photoItem;
+  return newPhotoItem;
+};
 
-  // создание и вставка на карту набора меток
-  const createPinsList = () => {
-    const pinsFragment = window.pin.createPinsFragment();
-    mapPins.appendChild(pinsFragment);
-  };
+// вставка сгенерированных фотографий во фрагмент
+const createPhotoFragment = (featuresObject) => {
+  let photoFragment = document.createDocumentFragment();
+  for (let featureObject of featuresObject) {
+    photoFragment.appendChild(generatePhotoItem(featureObject));
+  }
+  return photoFragment;
+};
 
-  // удаление набора меток с карты
-  const removePinsList = () => {
-    const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-    for (let pin of mapPinsList) {
-      pin.remove();
-    }
-  };
+// создание и вставка на карту набора меток
+const createPinsList = () => {
+  const pinsFragment = window.pin.createPinsFragment();
+  mapPins.appendChild(pinsFragment);
+};
 
-  // рендер карточки объявления
-  const renderCard = (pin) => {
-    let newCard = document.querySelector(`.map__card`);
+// удаление набора меток с карты
+const removePinsList = () => {
+  const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+  for (let pin of mapPinsList) {
+    pin.remove();
+  }
+};
 
-    if (!newCard) {
-      newCard = cardTemplate.cloneNode(true);
-    }
+// рендер карточки объявления
+const renderCard = (pin) => {
+  let newCard = document.querySelector(`.map__card`);
 
-    if (pin.offer.address) {
-      newCard.querySelector(`.popup__text--address`).textContent = pin.offer.address;
-    }
-    if (pin.offer.price) {
-      newCard.querySelector(`.popup__text--price`).textContent = pin.offer.price;
-    }
-    if (pin.offer.type) {
-      newCard.querySelector(`.popup__type`).textContent = getTypeTranslation(pin.offer.type);
-    }
-    if (pin.offer.rooms && pin.offer.guests) {
-      newCard.querySelector(`.popup__text--capacity`).textContent = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`;
-    }
-    if (pin.offer.checkin && pin.offer.checkout) {
-      newCard.querySelector(`.popup__text--time`).textContent = `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`;
-    }
-    if (pin.offer.features) {
-      newCard.querySelector(`.popup__features`).innerHTML = ``;
-      newCard.querySelector(`.popup__features`).appendChild(createFeaturesFragment(pin.offer.features));
-    }
-    if (pin.offer.description) {
-      newCard.querySelector(`.popup__description`).textContent = pin.offer.description;
-    }
-    if (pin.offer.photos) {
-      newCard.querySelector(`.popup__photos`).innerHTML = ``;
-      newCard.querySelector(`.popup__photos`).appendChild(createPhotoFragment(pin.offer.photos));
-    }
-    if (pin.author && pin.author.avatar) {
-      newCard.querySelector(`.popup__avatar`).src = pin.author.avatar;
-    }
+  if (!newCard) {
+    newCard = cardTemplate.cloneNode(true);
+  }
 
-    return newCard;
-  };
+  if (pin.offer.address) {
+    newCard.querySelector(`.popup__text--address`).textContent = pin.offer.address;
+  }
+  if (pin.offer.price) {
+    newCard.querySelector(`.popup__text--price`).textContent = pin.offer.price;
+  }
+  if (pin.offer.type) {
+    newCard.querySelector(`.popup__type`).textContent = getTypeTranslation(pin.offer.type);
+  }
+  if (pin.offer.rooms && pin.offer.guests) {
+    newCard.querySelector(`.popup__text--capacity`).textContent = `${pin.offer.rooms} комнаты для ${pin.offer.guests} гостей`;
+  }
+  if (pin.offer.checkin && pin.offer.checkout) {
+    newCard.querySelector(`.popup__text--time`).textContent = `Заезд после ${pin.offer.checkin}, выезд до ${pin.offer.checkout}`;
+  }
+  if (pin.offer.features) {
+    newCard.querySelector(`.popup__features`).innerHTML = ``;
+    newCard.querySelector(`.popup__features`).appendChild(createFeaturesFragment(pin.offer.features));
+  }
+  if (pin.offer.description) {
+    newCard.querySelector(`.popup__description`).textContent = pin.offer.description;
+  }
+  if (pin.offer.photos) {
+    newCard.querySelector(`.popup__photos`).innerHTML = ``;
+    newCard.querySelector(`.popup__photos`).appendChild(createPhotoFragment(pin.offer.photos));
+  }
+  if (pin.author && pin.author.avatar) {
+    newCard.querySelector(`.popup__avatar`).src = pin.author.avatar;
+  }
 
-  window.card = {
-    createPinsList,
-    removePinsList,
-    renderCard
-  };
+  return newCard;
+};
 
-})();
+window.card = {
+  createPinsList,
+  removePinsList,
+  renderCard
+};
+
+
