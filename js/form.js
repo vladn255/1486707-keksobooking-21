@@ -19,6 +19,9 @@ const priceInput = adForm.querySelector(`#price`);
 const typeInput = adForm.querySelector(`#type`);
 const checkinInput = adForm.querySelector(`#timein`);
 const checkoutInput = adForm.querySelector(`#timeout`);
+const adFormHeaderPreview = document.querySelector(`.ad-form-header__preview`)
+  .querySelector(`img`);
+const adFormPhotoPreview = document.querySelector(`.ad-form__photo`);
 
 const typesListPriceMin = window.data.typesListPriceMin;
 
@@ -163,6 +166,9 @@ const resetForm = () => {
 
   adForm.reset();
   mapFilters.reset();
+
+  adFormHeaderPreview.src = `img/muffin-grey.svg`;
+  adFormPhotoPreview.style.backgroundImage = ``;
 };
 
 window.form = {
