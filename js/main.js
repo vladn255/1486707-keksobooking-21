@@ -21,6 +21,7 @@ const checkoutInput = adForm.querySelector(`#timeout`);
 const onSetActiveMode = (evt) => {
 
   if (evt.button === 0 || evt.key === window.util.KEY_ENTER) {
+    window.card.removePinsList();
     window.card.createPinsList(window.pin.pinsFragment);
     window.map.addShowCardListeners();
 
@@ -40,7 +41,6 @@ const onSetActiveMode = (evt) => {
     priceInput.addEventListener(`input`, window.form.onInputPrice);
     checkinInput.addEventListener(`change`, window.form.onSetTime);
     checkoutInput.addEventListener(`change`, window.form.onSetTime);
-    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_HEIGHT / 2);
   }
 };
 
@@ -66,7 +66,7 @@ const onSubmit = (evt) => {
     mapPinMain.removeEventListener(`mousedown`, onSetActiveMode);
     mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
 
-    setInitialState();
+    onSetInitialState();
 
     document.addEventListener(`click`, onSuccessClick);
     document.addEventListener(`keydown`, onSuccessClick);
@@ -76,7 +76,7 @@ const onSubmit = (evt) => {
 };
 
 // установка изначальных условий
-const setInitialState = () => {
+const onSetInitialState = () => {
   mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
   mapPinMain.addEventListener(`mousedown`, onSetActiveMode);
   mapPinMain.addEventListener(`keydown`, onSetActiveMode);
@@ -84,7 +84,7 @@ const setInitialState = () => {
   window.card.removePinsList();
   window.form.resetForm();
   window.move.setInitialPosition();
-  window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_HEIGHT);
+  window.form.setAddressValue(mapPinMain);
   window.map.closeCardPopup();
 };
 
@@ -103,10 +103,10 @@ housingRooms.addEventListener(`change`, window.backend.debounce(onChangeFilter))
 housingGuests.addEventListener(`change`, window.backend.debounce(onChangeFilter));
 housingFeatures.addEventListener(`change`, window.backend.debounce(onChangeFilter));
 
-setInitialState();
+onSetInitialState();
 
 adForm.addEventListener(`submit`, onSubmit);
-formReset.addEventListener(`click`, setInitialState);
+formReset.addEventListener(`click`, onSetInitialState);
 
 window.form.setDisabledAttribute();
 

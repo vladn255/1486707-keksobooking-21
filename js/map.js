@@ -28,7 +28,7 @@ const showCard = (pinNumber) => {
     mapCardPopup.classList.remove(`visually-hidden`);
 
     mapCardPopupClose.addEventListener(`click`, onCloseCardPopup);
-    map.addEventListener(`keydown`, onCloseCardPopup);
+    document.addEventListener(`keydown`, onCloseCardPopup);
   }
 };
 

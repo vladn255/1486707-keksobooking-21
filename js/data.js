@@ -67,9 +67,8 @@ const isHousingPrice = (element) => {
     return element.offer.price < PRICE_RANGE_MIN;
   } else if (housingPriceValue === `high`) {
     return element.offer.price >= PRICE_RANGE_MAX;
-  } else {
-    return true;
   }
+  return true;
 };
 
 // проверка совпадения фильтра количества комнат

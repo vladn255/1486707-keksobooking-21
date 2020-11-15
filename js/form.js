@@ -120,7 +120,7 @@ const removeDisabledAttribute = () => {
 };
 
 // установка значения адреса в форме
-const setAddressValue = (pin, width = PIN_WIDTH / 2, height = PIN_HEIGHT / 2) => {
+const setAddressValue = (pin, width = PIN_WIDTH, height = PIN_HEIGHT / 2 - PIN_TAIL) => {
   let leftPosition = parseInt(pin.style.left, 10);
   let topPosition = parseInt(pin.style.top, 10);
   inputAddress.value = `${Math.round(leftPosition + width / 2)}, ${Math.round(topPosition + height + PIN_TAIL)}`;

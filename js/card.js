@@ -101,6 +101,9 @@ const renderCard = (pin) => {
   if (pin.author && pin.author.avatar) {
     newCard.querySelector(`.popup__avatar`).src = pin.author.avatar;
   }
+  if (pin.offer.title) {
+    newCard.querySelector(`.popup__title`).textContent = pin.offer.title;
+  }
 
   return newCard;
 };
