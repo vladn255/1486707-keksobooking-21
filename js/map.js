@@ -39,14 +39,19 @@ const onShowCard = (evt) => {
   }
   const mapPinNumber = evt.currentTarget.dataset.id;
   showCard(mapPinNumber);
+  evt.currentTarget.classList.add(`map__pin--active`);
 };
 
 // команда скрытия карточки объявления
 const closeCardPopup = () => {
   if (document.querySelector(`.map__card`)) {
     document.querySelector(`.map__card`).classList.add(`visually-hidden`);
-  }
 
+    const activeMapPin = document.querySelector(`.map__pin--active`);
+    if (activeMapPin) {
+      activeMapPin.classList.remove(`map__pin--active`);
+    }
+  }
 };
 
 // обработчик события для скрытия карточки
