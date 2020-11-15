@@ -10,6 +10,7 @@ module.exports = {
     './js/form.js',
     './js/map.js',
     './js/move.js',
+    './js/photos.js',
     './js/main.js',
   ],
 

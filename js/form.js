@@ -13,21 +13,21 @@ const map = document.querySelector(`.map`);
 const mapFilters = document.querySelector(`.map__filters`);
 const capacity = adForm.querySelector(`#capacity`);
 const roomNumber = adForm.querySelector(`#room_number`);
-const formInputsSet = {
-  adForm: adForm.querySelectorAll(`fieldset`),
-  mapFilter: mapFilters,
-  mapFiltersFieldsets: mapFilters.querySelectorAll(`fieldset`),
-  mapFiltersSelects: mapFilters.querySelectorAll(`select`)
-};
 const inputAddress = adForm.querySelector(`#address`);
 const titleInput = adForm.querySelector(`#title`);
 const priceInput = adForm.querySelector(`#price`);
 const typeInput = adForm.querySelector(`#type`);
 const checkinInput = adForm.querySelector(`#timein`);
 const checkoutInput = adForm.querySelector(`#timeout`);
-const descriptionInput = adForm.querySelector(`#description`);
 
 const typesListPriceMin = window.data.typesListPriceMin;
+
+const formInputsSet = {
+  adForm: adForm.querySelectorAll(`fieldset`),
+  mapFilter: mapFilters,
+  mapFiltersFieldsets: mapFilters.querySelectorAll(`fieldset`),
+  mapFiltersSelects: mapFilters.querySelectorAll(`select`)
+};
 
 // выставление статуса форм ввода
 const setInputsStatus = (collection, boolean) => {
@@ -161,10 +161,7 @@ const resetForm = () => {
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
 
-  titleInput.value = ``;
-  priceInput.value = ``;
-  descriptionInput.value = ``;
-
+  adForm.reset();
   mapFilters.reset();
 };
 

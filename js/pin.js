@@ -1,8 +1,7 @@
 'use strict';
 
-const PIN_WIDTH = 40;
-const PIN_HEIGHT = 40;
-const PIN_MAIN_HEIGHT = 44;
+const PIN_WIDTH = document.querySelector(`.map__pin--main`).offsetWidth;
+const PIN_HEIGHT = document.querySelector(`.map__pin--main`).offsetHeight;
 const PIN_QUANTITY = 5;
 const PIN_TAIL = 18;
 
@@ -43,7 +42,6 @@ const createPinsFragment = () => {
 window.pin = {
   PIN_WIDTH,
   PIN_HEIGHT,
-  PIN_MAIN_HEIGHT,
   PIN_QUANTITY,
   PIN_TAIL,
 

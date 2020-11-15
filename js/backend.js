@@ -9,6 +9,14 @@ const StatusCode = {
   OK: 200
 };
 
+const onCheckIfErrors = (request, onSuccess, onError) => {
+  if (request.status === StatusCode.OK) {
+    onSuccess(request.response);
+  } else {
+    onError(`Статус ответа: ` + request.status + ` ` + request.statusText);
+  }
+};
+
 /* функция получения данных с сервера:
  параметр1: обработчик при загрузке данных,
  параметр2: обработчик при ошибке
@@ -17,20 +25,15 @@ const load = (onLoad, onLoadError) => {
   let xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
-  const onCheckIfErrors = () => {
-    if (xhr.status === StatusCode.OK) {
-      onLoad(xhr.response);
-    } else {
-      onLoadError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
-    }
-  };
 
-  xhr.addEventListener(`load`, onCheckIfErrors);
+  xhr.addEventListener(`load`, () => {
+    onCheckIfErrors(xhr, onLoad, onLoadError);
+  });
 
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onLoadError(`Произошла ошибка соединения`);
   });
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onLoadError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
   });
 
@@ -43,20 +46,14 @@ const save = (data, onSave, onSaveError) => {
   let xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
 
-  const onCheckIfErrors = () => {
-    if (xhr.status === StatusCode.OK) {
-      onSave(xhr.response);
-    } else {
-      onSaveError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
-    }
-  };
+  xhr.addEventListener(`load`, () => {
+    onCheckIfErrors(xhr, onSave, onSaveError);
+  });
 
-  xhr.addEventListener(`load`, onCheckIfErrors);
-
-  xhr.addEventListener(`error`, function () {
+  xhr.addEventListener(`error`, () => {
     onSaveError(`Произошла ошибка соединения`);
   });
-  xhr.addEventListener(`timeout`, function () {
+  xhr.addEventListener(`timeout`, () => {
     onSaveError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
   });
 

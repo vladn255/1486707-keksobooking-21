@@ -46,13 +46,14 @@ const closeCardPopup = () => {
   if (document.querySelector(`.map__card`)) {
     document.querySelector(`.map__card`).classList.add(`visually-hidden`);
   }
-  addShowCardListeners();
+
 };
 
 // обработчик события для скрытия карточки
 const onCloseCardPopup = (evt) => {
   if ((evt.button === 0) || (evt.key === window.util.KEY_ESCAPE)) {
     closeCardPopup();
+    addShowCardListeners();
   }
 };
 window.map = {

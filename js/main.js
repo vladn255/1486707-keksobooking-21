@@ -1,7 +1,7 @@
 'use strict';
 
-const PIN_WIDTH = window.pin.PIN_WIDTH;
-const PIN_MAIN_HEIGHT = window.pin.PIN_MAIN_HEIGHT;
+const PIN_WIDTH = document.querySelector(`.map__pin--main`).offsetWidth;
+const PIN_HEIGHT = document.querySelector(`.map__pin--main`).offsetHeight;
 const map = document.querySelector(`.map`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
 const adForm = document.querySelector(`.ad-form`);
@@ -28,10 +28,10 @@ const onSetActiveMode = (evt) => {
     adForm.classList.remove(`ad-form--disabled`);
     window.form.removeDisabledAttribute();
 
-    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
+    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_HEIGHT);
 
     mapPinMain.removeEventListener(`mouseup`, onSetActiveMode);
-    // mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
+    mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
 
     adForm.addEventListener(`change`, window.form.onSetRooms);
     titleInput.addEventListener(`input`, window.form.onInputTitle);
@@ -40,7 +40,7 @@ const onSetActiveMode = (evt) => {
     priceInput.addEventListener(`input`, window.form.onInputPrice);
     checkinInput.addEventListener(`change`, window.form.onSetTime);
     checkoutInput.addEventListener(`change`, window.form.onSetTime);
-    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT / 2);
+    window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_HEIGHT / 2);
   }
 };
 
@@ -54,7 +54,7 @@ const onSuccessClick = (evt) => {
 };
 
 // обработчик отправки формы
-const submitHandler = (evt) => {
+const onSubmit = (evt) => {
   evt.preventDefault();
   if (document.querySelector(`.new__error`)) {
     window.data.removeErrorBlock();
@@ -64,6 +64,7 @@ const submitHandler = (evt) => {
     window.util.createSuccessBlock();
     mapPinMain.removeEventListener(`mousedown`, window.move.onTraceMainPin);
     mapPinMain.removeEventListener(`mousedown`, onSetActiveMode);
+    mapPinMain.removeEventListener(`keydown`, onSetActiveMode);
 
     setInitialState();
 
@@ -71,18 +72,20 @@ const submitHandler = (evt) => {
     document.addEventListener(`keydown`, onSuccessClick);
   };
 
-  window.backend.save(new FormData(adForm), onSuccess, window.data.errorHandler);
+  window.backend.save(new FormData(adForm), onSuccess, window.data.onError);
 };
 
 // установка изначальных условий
 const setInitialState = () => {
   mapPinMain.addEventListener(`mousedown`, window.move.onTraceMainPin);
   mapPinMain.addEventListener(`mousedown`, onSetActiveMode);
+  mapPinMain.addEventListener(`keydown`, onSetActiveMode);
 
   window.card.removePinsList();
   window.form.resetForm();
   window.move.setInitialPosition();
-  window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_MAIN_HEIGHT);
+  window.form.setAddressValue(mapPinMain, PIN_WIDTH, PIN_HEIGHT);
+  window.map.closeCardPopup();
 };
 
 // обработчик изменения состояния фильтра
@@ -90,6 +93,7 @@ const onChangeFilter = () => {
   window.card.removePinsList();
   window.data.filterPins();
   window.card.createPinsList(window.pin.pinsFragment);
+  window.map.addShowCardListeners();
   window.map.closeCardPopup();
 };
 
@@ -101,7 +105,7 @@ housingFeatures.addEventListener(`change`, window.backend.debounce(onChangeFilte
 
 setInitialState();
 
-adForm.addEventListener(`submit`, submitHandler);
+adForm.addEventListener(`submit`, onSubmit);
 formReset.addEventListener(`click`, setInitialState);
 
 window.form.setDisabledAttribute();

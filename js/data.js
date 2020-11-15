@@ -20,10 +20,10 @@ const housingFeatures = map.querySelector(`#housing-features`);
 let initialPins = [];
 
 // обработчик успешного получения данных об авторах с сервера - добавляет их в массив initialPins
-const successHandler = (dataPins) => {
+const onSucces = (dataPins) => {
   if (document.querySelector(`.error`)) {
     document.querySelector(`.error__button`)
-      .removeEventListener(`click`, window.backend.load(successHandler, errorHandler));
+      .removeEventListener(`click`, window.backend.load(onSucces, onError));
     window.util.removeErrorBlock();
   }
 
@@ -33,12 +33,12 @@ const successHandler = (dataPins) => {
 // обработчик закрытия окна ошибки
 const onCloseError = (evt) => {
   if (evt.button === 0 || evt.key === window.util.KEY_ESCAPE) {
-    window.backend.load(successHandler, errorHandler);
+    window.backend.load(onSucces, onError);
   }
 };
 
 // обработчик получения ошибки при получении данных с сервера
-const errorHandler = (textMessage) => {
+const onError = (textMessage) => {
   if (document.querySelector(`.error`)) {
     window.util.removeErrorBlock();
   }
@@ -122,11 +122,11 @@ const filterPins = () => {
   return filteredPins;
 };
 
-window.backend.load(successHandler, errorHandler);
+window.backend.load(onSucces, onError);
 
 window.data = {
   typesListPriceMin,
-  errorHandler,
+  onError,
   filterPins
 };
 

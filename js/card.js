@@ -26,9 +26,9 @@ const createFeaturesItem = (featuresObjectItem) => {
 };
 
 // создание фрагмента со списком удобств
-const createFeaturesFragment = (featuresObject) => {
+const createFeaturesFragment = (featuresArray) => {
   let featuresFragment = document.createDocumentFragment();
-  for (let feature of featuresObject) {
+  for (let feature of featuresArray) {
     featuresFragment.appendChild(createFeaturesItem(feature));
   }
   return featuresFragment;
@@ -42,10 +42,10 @@ const generatePhotoItem = (photoItem) => {
 };
 
 // вставка сгенерированных фотографий во фрагмент
-const createPhotoFragment = (featuresObject) => {
+const createPhotoFragment = (photos) => {
   let photoFragment = document.createDocumentFragment();
-  for (let featureObject of featuresObject) {
-    photoFragment.appendChild(generatePhotoItem(featureObject));
+  for (let photo of photos) {
+    photoFragment.appendChild(generatePhotoItem(photo));
   }
   return photoFragment;
 };
