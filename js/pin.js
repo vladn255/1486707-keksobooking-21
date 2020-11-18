@@ -1,9 +1,9 @@
 'use strict';
 
-const PIN_WIDTH = document.querySelector(`.map__pin--main`).offsetWidth;
-const PIN_HEIGHT = document.querySelector(`.map__pin--main`).offsetHeight;
-const PIN_QUANTITY = 5;
-const PIN_TAIL = 18;
+const WIDTH = document.querySelector(`.map__pin--main`).offsetWidth;
+const HEIGHT = document.querySelector(`.map__pin--main`).offsetHeight;
+const QUANTITY = 5;
+const TAIL = 18;
 
 const pinTemplate = document.querySelector(`#pin`)
   .content
@@ -12,8 +12,8 @@ const pinTemplate = document.querySelector(`#pin`)
 // создание метки на карте
 const createPin = (pinInfo, index) => {
   let newPinItem = pinTemplate.cloneNode(true);
-  newPinItem.style.left = `${(pinInfo.location.x - PIN_WIDTH / 2)}px`;
-  newPinItem.style.top = `${(pinInfo.location.y - PIN_HEIGHT)}px`;
+  newPinItem.style.left = `${(pinInfo.location.x - WIDTH / 2)}px`;
+  newPinItem.style.top = `${(pinInfo.location.y - HEIGHT)}px`;
 
   let newPinItemImg = newPinItem.querySelector(`img`);
   newPinItemImg.src = pinInfo.author.avatar;
@@ -26,9 +26,9 @@ const createPin = (pinInfo, index) => {
 const createPinsFragment = () => {
   const pinsList = window.data.filterPins();
   let pinFragment = document.createDocumentFragment();
-  let pinsCount = pinsList.length < PIN_QUANTITY
+  let pinsCount = pinsList.length < QUANTITY
     ? pinsList.length
-    : PIN_QUANTITY;
+    : QUANTITY;
 
   for (let i = 0; i < pinsCount; i++) {
     if (pinsList[i].offer) {
@@ -40,10 +40,10 @@ const createPinsFragment = () => {
 };
 
 window.pin = {
-  PIN_WIDTH,
-  PIN_HEIGHT,
-  PIN_QUANTITY,
-  PIN_TAIL,
+  WIDTH,
+  HEIGHT,
+  QUANTITY,
+  TAIL,
 
   createPinsFragment
 };

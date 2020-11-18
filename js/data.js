@@ -31,8 +31,14 @@ const onSucces = (dataPins) => {
 };
 
 // обработчик закрытия окна ошибки
-const onCloseError = (evt) => {
-  if (evt.button === 0 || evt.key === window.util.KEY_ESCAPE) {
+const onCloseErrorClick = (evt) => {
+  if (evt.button === 0) {
+    window.backend.load(onSucces, onError);
+  }
+};
+
+const onCloseErrorKeydown = (evt) => {
+  if (evt.key === window.util.KEY_ESCAPE) {
     window.backend.load(onSucces, onError);
   }
 };
@@ -45,9 +51,9 @@ const onError = (textMessage) => {
 
   document.body.insertAdjacentElement(`afterbegin`, window.util.createErrorBlock(textMessage));
   document.querySelector(`.error__button`)
-    .addEventListener(`mousedown`, onCloseError);
-  document.addEventListener(`click`, onCloseError);
-  document.addEventListener(`keydown`, onCloseError);
+    .addEventListener(`mousedown`, onCloseErrorClick);
+  document.addEventListener(`click`, onCloseErrorClick);
+  document.addEventListener(`keydown`, onCloseErrorKeydown);
 };
 
 // проверка совпадения фильтра типа жилья заданному

@@ -4,9 +4,9 @@ const MAX_ROOMS_COUNT = 100;
 const MAX_PRICE = 1000000;
 const TITLE_MIN_LENGTH = 30;
 const TITLE_MAX_LENGTH = 100;
-const PIN_WIDTH = window.pin.PIN_WIDTH;
-const PIN_HEIGHT = window.pin.PIN_HEIGHT;
-const PIN_TAIL = window.pin.PIN_TAIL;
+const PIN_WIDTH = window.pin.WIDTH;
+const PIN_HEIGHT = window.pin.HEIGHT;
+const PIN_TAIL = window.pin.TAIL;
 
 const adForm = document.querySelector(`.ad-form`);
 const map = document.querySelector(`.map`);
@@ -27,20 +27,20 @@ const typesListPriceMin = window.data.typesListPriceMin;
 
 const formInputsSet = {
   adForm: adForm.querySelectorAll(`fieldset`),
-  mapFilter: mapFilters,
+  mapFilter: mapFilters.querySelectorAll(`.map__filter`),
   mapFiltersFieldsets: mapFilters.querySelectorAll(`fieldset`),
   mapFiltersSelects: mapFilters.querySelectorAll(`select`)
 };
 
 // выставление статуса форм ввода
 const setInputsStatus = (collection, boolean) => {
-  for (let item of collection) {
+  collection.forEach((item) => {
     if (boolean) {
       item.setAttribute(`disabled`, true);
     } else {
       item.removeAttribute(`disabled`);
     }
-  }
+  });
 };
 
 // задание условий правильности формы комнат
@@ -104,19 +104,11 @@ const setTimeValidity = (time) => {
 };
 
 // установка статуса "недоступно" в форме
-const setDisabledAttribute = () => {
-  setInputsStatus(formInputsSet.adForm, true);
-  setInputsStatus(formInputsSet.mapFilter, true);
-  setInputsStatus(formInputsSet.mapFiltersFieldsets, true);
-  setInputsStatus(formInputsSet.mapFiltersSelects, true);
-};
-
-// удаление статуса "недоступно" в форме
-const removeDisabledAttribute = () => {
-  setInputsStatus(formInputsSet.adForm, false);
-  setInputsStatus(formInputsSet.mapFilter, false);
-  setInputsStatus(formInputsSet.mapFiltersFieldsets, false);
-  setInputsStatus(formInputsSet.mapFiltersSelects, false);
+const setDisabledAttribute = (boolean) => {
+  setInputsStatus(formInputsSet.adForm, boolean);
+  setInputsStatus(formInputsSet.mapFilter, boolean);
+  setInputsStatus(formInputsSet.mapFiltersFieldsets, boolean);
+  setInputsStatus(formInputsSet.mapFiltersSelects, boolean);
 };
 
 // установка значения адреса в форме
@@ -159,8 +151,8 @@ const onSetTime = (evt) => {
 
 
 // сброс состояния формы
-const resetForm = () => {
-  setDisabledAttribute();
+const reset = () => {
+  setDisabledAttribute(true);
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
 
@@ -173,13 +165,12 @@ const resetForm = () => {
 
 window.form = {
   setDisabledAttribute,
-  removeDisabledAttribute,
   setAddressValue,
   onSetRooms,
   onInputTitle,
   onChangeType,
   onInputPrice,
   onSetTime,
-  resetForm
+  reset
 };
 

@@ -59,13 +59,13 @@ const createPinsList = () => {
 // удаление набора меток с карты
 const removePinsList = () => {
   const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-  for (let pin of mapPinsList) {
+  mapPinsList.forEach((pin) => {
     pin.remove();
-  }
+  });
 };
 
 // рендер карточки объявления
-const renderCard = (pin) => {
+const render = (pin) => {
   let newCard = document.querySelector(`.map__card`);
 
   if (!newCard) {
@@ -111,7 +111,7 @@ const renderCard = (pin) => {
 window.card = {
   createPinsList,
   removePinsList,
-  renderCard
+  render
 };
 
 

@@ -21,7 +21,7 @@ const showCard = (pinNumber) => {
   const cardNumberArray = window.data.filterPins();
   if (cardNumberArray.length !== 0) {
     const cardNumber = cardNumberArray[pinNumber];
-    insertCard(window.card.renderCard(cardNumber));
+    insertCard(window.card.render(cardNumber));
 
     const mapCardPopup = document.querySelector(`.map__card`);
     const mapCardPopupClose = mapCardPopup.querySelector(`.popup__close`);
